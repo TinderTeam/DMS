@@ -2,11 +2,10 @@ package cn.fuego.dms.ui.control;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.widgets.Display;
 
 import cn.fuego.dms.service.DataCollectionService;
 import cn.fuego.dms.service.impt.DataCollectionServiceImpl;
-import cn.fuego.dms.ui.frame.MainFrame;
+import cn.fuego.dms.ui.frame.MainJFrame;
 
 
  
@@ -16,8 +15,8 @@ public class UIController extends Thread
 	DataCollectionService dataCollectionServcie = new DataCollectionServiceImpl();
 	
 	int REFRASH_RATE=1000;
-	private MainFrame frame;
-	public UIController(MainFrame mainFrame){
+	private MainJFrame frame;
+	public UIController(MainJFrame mainFrame){
 		super();
 		log.info("start");
 		frame=mainFrame;
@@ -32,17 +31,13 @@ public class UIController extends Thread
 			
 			try
 			{
-				Display.getDefault().asyncExec(new Runnable(){
-				    @Override
-				    public void run() {
-				    	
+				
 				    	log.info("刷新数据"); 
 				    	
 						frame.updateData(
-								dataCollectionServcie.getDataByBaseSiteName(frame.getBaseID())
+								dataCollectionServcie.getDataByBaseSiteName(frame.getSelectedBaseSite())
 								);
-				    }
-				   });
+				
 				
 				
 				UIController.sleep(REFRASH_RATE);
