@@ -3,8 +3,8 @@ package cn.fuego.dms.ui.control;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.fuego.dms.service.DataCollectionService;
-import cn.fuego.dms.service.impt.DataCollectionServiceImpl;
+import cn.fuego.dms.service.DataCollectorService;
+import cn.fuego.dms.service.impl.DataCollectionServiceImpl;
 import cn.fuego.dms.ui.frame.MainJFrame;
 
 
@@ -12,7 +12,7 @@ import cn.fuego.dms.ui.frame.MainJFrame;
 public class UIController extends Thread
 {
 	private Log log = LogFactory.getLog(UIController.class);
-	DataCollectionService dataCollectionServcie = new DataCollectionServiceImpl();
+	DataCollectorService dataCollectionServcie = new DataCollectionServiceImpl();
 	
 	int REFRASH_RATE=1000;
 	private MainJFrame frame;

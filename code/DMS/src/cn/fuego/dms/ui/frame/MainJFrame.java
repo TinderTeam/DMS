@@ -1,14 +1,11 @@
 package cn.fuego.dms.ui.frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -32,25 +30,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.fuego.dms.service.ContextService;
-import cn.fuego.dms.service.impt.ContextServiceImpl;
+import cn.fuego.dms.service.SystemBasicService;
+import cn.fuego.dms.service.impl.SystemBasicServiceImpl;
 import cn.fuego.dms.ui.constant.UIConstant;
 import cn.fuego.dms.ui.control.MenuActionListener;
 import cn.fuego.dms.ui.control.UIController;
 import cn.fuego.dms.ui.model.MonitorValueGroup;
 import cn.fuego.dms.ui.model.MonitorView;
-
-import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
-
-import java.awt.event.KeyEvent;
-
-import javax.swing.JToolBar;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 public class MainJFrame extends JFrame
@@ -60,7 +46,7 @@ public class MainJFrame extends JFrame
 	private JPanel contentPane;
 	
 	static Log log = LogFactory.getLog(MainJFrame.class);
-	ContextService  contextService = new ContextServiceImpl();
+	SystemBasicService  contextService = new SystemBasicServiceImpl();
 	
 	private String selectedBaseSite;	//选中的对象
 	private JLabel lblServer;
