@@ -5,11 +5,15 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -31,9 +35,22 @@ import org.apache.commons.logging.LogFactory;
 import cn.fuego.dms.service.ContextService;
 import cn.fuego.dms.service.impt.ContextServiceImpl;
 import cn.fuego.dms.ui.constant.UIConstant;
+import cn.fuego.dms.ui.control.MenuActionListener;
 import cn.fuego.dms.ui.control.UIController;
 import cn.fuego.dms.ui.model.MonitorValueGroup;
 import cn.fuego.dms.ui.model.MonitorView;
+
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+
+import java.awt.event.KeyEvent;
+
+import javax.swing.JToolBar;
+import javax.swing.JButton;
+import javax.swing.BoxLayout;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class MainJFrame extends JFrame
@@ -52,43 +69,44 @@ public class MainJFrame extends JFrame
 	
 	private JTree treeBaseSite;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
-	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					MainJFrame frame = new MainJFrame();
-					frame.setVisible(true);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public MainJFrame()
 	{
+		initFont();
+		ImageIcon icon=new ImageIcon("icon\\icon-success.jpg");
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainJFrame.class.getResource("/resource/icon.png")));
+	
 		setTitle("中国移动基站设备监控系统");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1024, 768);
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("New menu");
+		JMenu mnNewMenu = new JMenu("系统");
 		menuBar.add(mnNewMenu);
+		MenuActionListener mls= new MenuActionListener(this);
+		JMenuItem mntmRefresh = new JMenuItem("刷新");
+		mntmRefresh.addActionListener(mls);
+		mntmRefresh.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/refresh.png")));
+		mnNewMenu.add(mntmRefresh);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
-		mnNewMenu.add(mntmNewMenuItem);
+		JMenuItem mntmAbout = new JMenuItem("关于DMS...");
+		mntmAbout.addActionListener(mls);
+		mntmAbout.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/aboutus.png")));
+		mnNewMenu.add(mntmAbout);
+		
+		JSeparator separator = new JSeparator();
+		mnNewMenu.add(separator);
+		
+		JMenuItem mntmExit = new JMenuItem("退出");
+		mntmExit.addActionListener(mls);
+		mntmExit.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/exit.png")));
+		mnNewMenu.add(mntmExit);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -222,6 +240,31 @@ public class MainJFrame extends JFrame
 		UIController uic = new UIController(this);
 	}
 
+	private void initFont()
+	{
+		 try {
+		       Font commonFont = new Font("宋体",Font.PLAIN,12);
+		       Font titleFont = new Font("宋体",Font.BOLD,13);
+		       UIManager.getDefaults().put( "TextField.inactiveForeground", Color.darkGray);
+		       UIManager.getDefaults().put( "Button.font",commonFont);
+		       UIManager.getDefaults().put( "ComboBox.font",commonFont);
+		       UIManager.getDefaults().put( "CheckBox.font",commonFont);
+		       UIManager.getDefaults().put( "Label.font", commonFont);
+		       UIManager.getDefaults().put( "Menu.font", commonFont);
+		       UIManager.getDefaults().put( "MenuBar.font", commonFont);
+		       UIManager.getDefaults().put( "MenuItem.font", commonFont);
+		       UIManager.getDefaults().put( "RadioButtonMenuItem.font", commonFont);
+		       UIManager.getDefaults().put( "TabbedPane.font",commonFont);
+		       UIManager.getDefaults().put( "ToggleButton.font",commonFont);
+		       UIManager.getDefaults().put( "TitledBorder.font",titleFont);
+		       UIManager.getDefaults().put("List.font",commonFont);
+		    // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		    }
+		    catch(Exception e) {
+		      e.printStackTrace();
+		    }
+	}
+
 	private void loadLbl(JPanel panel,int id)
 	{
 		List<MonitorValueGroup> list= contextService.loadMonitorList(id);
@@ -249,9 +292,7 @@ public class MainJFrame extends JFrame
 				if(null!=mv){
 					mv.getMonitorValue().setText(mvg.getMonitorValue());
 				}
-			}
-		
-			
+			}		
 		}
 		
 	}

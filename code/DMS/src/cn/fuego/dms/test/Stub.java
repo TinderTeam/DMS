@@ -76,10 +76,18 @@ public class Stub
 		 List<MonitorValueGroup>  list = new  ArrayList<MonitorValueGroup>();
 		 for(int i=0;i<10;i++){
 			 MonitorValueGroup a = new MonitorValueGroup();
-			 a.setMonitorID(i);
-			 a.setMonitorName("基站指标名称"+i);
-			 a.setMonitorValue(str+String.valueOf((new Random().nextInt(2))));
-			 a.setMonitorUnit("单位");
+			 if(str==null){
+				 a.setMonitorID(i);
+				 a.setMonitorName("基站指标名称"+i);
+				 a.setMonitorValue("无基站");
+				 a.setMonitorUnit("单位"); 
+			 }else{
+				 a.setMonitorID(i);
+				 a.setMonitorName("基站指标名称"+i);
+				 a.setMonitorValue(str+String.valueOf((new Random().nextInt())));
+				 a.setMonitorUnit("单位"); 
+			 }
+			 
 			 list.add(a);
 		 }
 		
