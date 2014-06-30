@@ -8,6 +8,7 @@
 */ 
 package cn.fuego.dms.service.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** 
@@ -23,7 +24,7 @@ public class Resource
 	private String resID;
 	private String resName;
 	private String resType;
-	private List<Indicator> indicatorList;
+	private List<Indicator> indicatorList = new ArrayList<Indicator>();
 	public String getResID()
 	{
 		return resID;
@@ -55,6 +56,11 @@ public class Resource
 	public void setIndicatorList(List<Indicator> indicatorList)
 	{
 		this.indicatorList = indicatorList;
+	}
+	@Override
+	public String toString()
+	{
+		return "Resource [resID=" + resID + ", resName=" + resName + ", resType=" + resType + ", indicatorList=" + indicatorList + "]";
 	}
 	
 	

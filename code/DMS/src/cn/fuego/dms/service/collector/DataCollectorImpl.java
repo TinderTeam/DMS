@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 
+import cn.fuego.dms.service.DataCollectorService;
 import cn.fuego.dms.service.model.Collection;
 
 /** 
@@ -22,10 +23,10 @@ import cn.fuego.dms.service.model.Collection;
  *  
  */
 
-public class DataCollectorImpl
+public class DataCollectorImpl implements DataCollectorService
 {
 	/* data collector period*/
-	private int period = 10; //unit is second
+	private int period = 15; //unit is second
 	
 	private Timer timer; 
 	

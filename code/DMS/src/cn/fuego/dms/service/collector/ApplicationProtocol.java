@@ -25,7 +25,16 @@ public class ApplicationProtocol
 	private static final String PACKET_HEAD = "whut";
 	private static final String PACKET_END = "fuego";
 	
-	public boolean isValid(String data)
+	public static final int CMD_LENGTH = 1;
+	public static final String CMD_QUIT = "q";
+	public static final String CMD_WRITE_DATA = "w";
+	public static final String CMD_READ_DATA = "r";
+	
+	public static final String DATA_END_FLAG = "\r\n";
+	
+	public static final int DATA_LENGTH = PACKET_HEAD.length() +10+ PACKET_END.length();
+	
+	public static boolean isValid(String data)
 	{
 		if(!data.startsWith(PACKET_HEAD))
 		{
@@ -38,14 +47,41 @@ public class ApplicationProtocol
 		return true;
 	}
 	
-	public List<Collection> decode(String data)
+	public static String decode(String data)
 	{
-		return null;
+		String message = null;
+		if(!isValid(data))
+		{
+			return message;
+		}
+		message = data.substring(PACKET_HEAD.length(),data.length()-PACKET_END.length());
+		return message;
 	}
 	
-	public String encode()
+	public static String getCommand(String message)
 	{
-		return null;
+		return message.substring(0,CMD_LENGTH);
+	}
+	public static String getData(String message)
+	{
+		return message.substring(CMD_LENGTH,message.length());
+	}
+	public static String getResID(String data)
+	{
+		String resID = "";
+		int resNum = 0;
+		byte[] dataBytes = data.getBytes();
+		if(dataBytes.length>1)
+		{
+			resNum = dataBytes[0]*256 + dataBytes[1];
+		}
+		resID = String.valueOf(resNum);
+		return resID;
+	}
+	
+	public static String encode(String encode)
+	{
+		return PACKET_HEAD+encode+PACKET_END;
 	}
 	
 

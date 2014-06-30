@@ -8,6 +8,7 @@
 */ 
 package cn.fuego.dms.service.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class Collection
 {
-	private List<Resource> resourceList;
+	private List<Resource> resourceList = new ArrayList<Resource>();
 	private Calendar collectTime;
 	public List<Resource> getResourceList()
 	{
@@ -39,6 +40,12 @@ public class Collection
 	{
 		this.collectTime = collectTime;
 	}
+	@Override
+	public String toString()
+	{
+		return "Collection [resourceList=" + resourceList + ", collectTime=" + collectTime + "]";
+	}
+	
 	
 	
 }

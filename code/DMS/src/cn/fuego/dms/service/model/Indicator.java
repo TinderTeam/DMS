@@ -63,6 +63,11 @@ public class Indicator
 	{
 		this.value = value;
 	}
+	@Override
+	public String toString()
+	{
+		return "Indicator [indicatorID=" + indicatorID + ", name=" + name + ", unit=" + unit + ", dataType=" + dataType + ", value=" + value + "]";
+	}
 	
 	
 

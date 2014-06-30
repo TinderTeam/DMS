@@ -209,11 +209,13 @@ public class UartCommunicatorImpl  implements Communicator, SerialPortEventListe
 			   if ((System.currentTimeMillis() - nowTime) / 1000 > timeout)
 			   {
 				   log.warn("read data time out. time out is " + timeout);
+				   log.warn("now the buffer data is " + readMessage);
 				   break;
 			   }
  		}
 		
  
+		log.info("the uart read message is :"+readMessage);
 		return readMessage;
 	}
 
@@ -323,7 +325,8 @@ public class UartCommunicatorImpl  implements Communicator, SerialPortEventListe
 				int ch;
 				while((ch=inputStream.read()) > 0) 
 				{   
-					messageBuffer.append((char)ch);   
+					messageBuffer.append((char)ch);
+					
 				}   
 			}
 			catch (IOException e)

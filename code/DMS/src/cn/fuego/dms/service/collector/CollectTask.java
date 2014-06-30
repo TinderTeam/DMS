@@ -16,8 +16,10 @@ import java.util.TimerTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.fuego.dms.communicate.physical.impl.UartCommunicatorImpl;
+import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
 import cn.fuego.dms.service.model.Collection;
+import cn.fuego.dms.service.model.Indicator;
+import cn.fuego.dms.service.model.Resource;
 
 /** 
  * @ClassName: CollectTask 
@@ -42,26 +44,86 @@ public class CollectTask extends TimerTask
 	{
 		
 		log.info("now collector time is " + Calendar.getInstance().getTime().toLocaleString());
-		Collection nextCollection = this.getNextCollection();
-		if(cacheLenth == dataCache.size())
+		
+		Collection nextCollection = null;
+		try
 		{
-			this.dataCache.remove(0);
-			this.dataCache.add(nextCollection);
+		   nextCollection = this.getNextCollection();
 		}
-		else
+		catch(Exception e)
 		{
-			this.dataCache.add(nextCollection);
+			log.error("collect data error ",e);
 		}
+		if(null != nextCollection)
+		{
+			if(cacheLenth == dataCache.size())
+			{
+				this.dataCache.remove(0);
+				this.dataCache.add(nextCollection);
+			}
+			else
+			{
+				this.dataCache.add(nextCollection);
+			}
+		}
+	
+
 	}
 	private Collection getNextCollection()
 	{
+		String  sendMessage = ApplicationProtocol.CMD_READ_DATA;
 		
-		return null;
+		sendMessage = ApplicationProtocol.encode(sendMessage) + ApplicationProtocol.DATA_END_FLAG;
+		
+		GPRSFactory.getInstance().getGPRSOperator().sendData(sendMessage);
+
+		String readMessage = GPRSFactory.getInstance().getGPRSOperator().readData(ApplicationProtocol.CMD_LENGTH+ApplicationProtocol.DATA_LENGTH);
+		
+		Collection collection = null;
+		if(ApplicationProtocol.isValid(readMessage))
+		{
+			String decodeMessage = ApplicationProtocol.decode(readMessage);
+			collection = parseData(ApplicationProtocol.getData(decodeMessage));
+		}
+		else
+		{	
+			log.error("the read message is invalid. read message is :"+readMessage);
+		}
+		log.info("now collection is :" + collection);
+		
+		return collection;
 	}
 	
 	public Collection getCurCollection()
 	{
 		return this.dataCache.get(this.dataCache.size());
+	}
+	
+	private Collection parseData(String readMessage)
+	{
+		log.info(readMessage);
+		Collection collection = new Collection();
+		
+		//first two byte is resource id (base station id)
+		String resID = ApplicationProtocol.getResID(readMessage);
+		Resource resource = new Resource();
+		resource.setResID(resID);
+		
+		//convert indicator value;
+		byte[] dataBytes = readMessage.getBytes();
+		if(dataBytes.length>1)
+		{
+			for(int i=2;i<dataBytes.length;i = i +2)
+			{
+				Indicator indicator = new Indicator();
+				indicator.setIndicatorID(dataBytes[i]);
+				indicator.setValue(String.valueOf(dataBytes[i+1]));
+				resource.getIndicatorList().add(indicator);
+			}
+		}
+		collection.setCollectTime(Calendar.getInstance());
+		collection.getResourceList().add(resource);
+		return collection;
 	}
 
 }

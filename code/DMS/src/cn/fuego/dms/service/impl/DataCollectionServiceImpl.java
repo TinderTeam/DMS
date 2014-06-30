@@ -9,13 +9,7 @@ import cn.fuego.dms.ui.model.MonitorValueGroup;
 
 public class DataCollectionServiceImpl implements DataCollectorService
 {
-	@Override
-	public List<MonitorValueGroup> getDataByBaseSiteName(String baseSiteName)
-	{
-		
-		return Stub.getRadomData(baseSiteName);
-	}
-
+ 
 	/* (non-Javadoc)
 	 * @see cn.fuego.dms.service.DataCollectorService#modifyPeriod(int)
 	 */

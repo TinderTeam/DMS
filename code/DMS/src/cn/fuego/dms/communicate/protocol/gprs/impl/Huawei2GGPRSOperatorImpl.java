@@ -328,7 +328,6 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 			log.error("read data failed.the result is :" + result);
 			throw new CommunicateException(CommunicateException.READ_DATA_FAILED);
 		}
-		
 		//read data ready flag ^SISR=0,1  
 		String readFlag = "^SISR:";
 		result = this.communicator.readData(GPRSCmdConst.END_FLAG);
