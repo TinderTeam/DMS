@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BaseSiteList>
+	<BaseSite id="00000001">东莞基站</BaseSite>
+	<BaseSite id="00000002">武汉基站</BaseSite>
+	<BaseSite id="00000003">广州基站</BaseSite>
+	<BaseSite id="00000004">北京基站</BaseSite>
+	<BaseSite id="00000005">上海基站</BaseSite>
+	<BaseSite id="00000006">深圳基站</BaseSite>
+	<BaseSite id="00000007">河源基站</BaseSite>
+	<BaseSite id="00000008">惠州基站</BaseSite>
+	
+</BaseSiteList>

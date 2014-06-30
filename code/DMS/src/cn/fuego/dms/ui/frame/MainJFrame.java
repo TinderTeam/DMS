@@ -30,13 +30,20 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
+import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
 import cn.fuego.dms.service.SystemBasicService;
 import cn.fuego.dms.service.impl.SystemBasicServiceImpl;
+import cn.fuego.dms.service.model.Indicator;
+import cn.fuego.dms.service.model.Resource;
 import cn.fuego.dms.ui.constant.UIConstant;
 import cn.fuego.dms.ui.control.MenuActionListener;
 import cn.fuego.dms.ui.control.UIController;
 import cn.fuego.dms.ui.model.MonitorValueGroup;
 import cn.fuego.dms.ui.model.MonitorView;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class MainJFrame extends JFrame
@@ -62,6 +69,14 @@ public class MainJFrame extends JFrame
 	 */
 	public MainJFrame()
 	{
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				GPRSOperator gprsOperator =GPRSFactory.getInstance().getGPRSOperator(); 
+				gprsOperator.closeGPRS();
+				System.exit(0);
+			}
+		});
 		initFont();
 		ImageIcon icon=new ImageIcon("icon\\icon-success.jpg");
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainJFrame.class.getResource("/resource/icon.png")));
@@ -223,6 +238,10 @@ public class MainJFrame extends JFrame
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_12.add(lblNewLabel);
+		
+		
+		
+		
 		UIController uic = new UIController(this);
 	}
 
@@ -270,15 +289,15 @@ public class MainJFrame extends JFrame
 		}
 	}
 	
-	public void updateData(List<MonitorValueGroup> radomData)
+	public void updateData(Resource r)
 	{
-		for(MonitorValueGroup mvg:radomData){
-			if(mvg!=null && monitorMap!=null ){
-				MonitorView mv=monitorMap.get(mvg.getMonitorID());
-				if(null!=mv){
-					mv.getMonitorValue().setText(mvg.getMonitorValue());
-				}
-			}		
+		if(r!=null&&r.getIndicatorList()!=null){
+			for(Indicator i:r.getIndicatorList()){
+				MonitorView mv=monitorMap.get(i.getIndicatorID());
+					if(null!=mv){
+						mv.getMonitorValue().setText(i.getValue()+i.getUnit());
+					}		
+			}	
 		}
 		
 	}

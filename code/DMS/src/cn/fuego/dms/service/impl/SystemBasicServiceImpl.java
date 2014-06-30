@@ -1,55 +1,60 @@
 package cn.fuego.dms.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import cn.fuego.dms.dao.BaseSiteDao;
+import cn.fuego.dms.dao.IndicatorInfoDao;
+import cn.fuego.dms.dao.impl.BaseSiteDaoImpl;
+import cn.fuego.dms.dao.impl.IndicatorInfoDaoImpl;
+import cn.fuego.dms.domain.po.BaseSite;
+import cn.fuego.dms.domain.po.IndicatorInfo;
 import cn.fuego.dms.service.SystemBasicService;
 import cn.fuego.dms.test.Stub;
-
 import cn.fuego.dms.ui.model.MonitorValueGroup;
 import cn.fuego.dms.ui.model.MonitorView;
 
 public class SystemBasicServiceImpl implements SystemBasicService
 {
-
+	IndicatorInfoDao indicateDao = new IndicatorInfoDaoImpl();
+	BaseSiteDao baseSiteDao = new BaseSiteDaoImpl();
 	public DefaultTreeModel LoadBaseSiteTree()
 	{
-		DefaultMutableTreeNode a=	new DefaultMutableTreeNode("地方官");
-		DefaultTreeModel treeModel=new DefaultTreeModel(a);
-		
-	
-		DefaultMutableTreeNode b=	new DefaultMutableTreeNode("地的双方方官");
-		
-		DefaultMutableTreeNode main =new DefaultMutableTreeNode("root");
-		a.add(b);
-		a.add(main);
-		
+		baseSiteDao.getAll();
+		DefaultMutableTreeNode root=new DefaultMutableTreeNode("基站列表");
+		for( BaseSite b:baseSiteDao.getAll()){
+			DefaultMutableTreeNode node=new DefaultMutableTreeNode(	String.valueOf(b.getResourceID()));
+			root.add(node);
+		}
+		DefaultTreeModel treeModel=new DefaultTreeModel(root);
 		return treeModel;
 			
 	}
 
-	@Override
-	public  Map<Integer,Integer> loadIndicatorTypeMap()
-	{
-		return Stub.getIndicatorType();
-		
-	}
+
 	public List<MonitorValueGroup> loadMonitorList(int id)
 	{
-		List<MonitorValueGroup>  list  =Stub.getMap();
-		List<MonitorValueGroup> typeList = new ArrayList<MonitorValueGroup>();
-		Map<Integer,Integer> map=loadIndicatorTypeMap();
-		
-		for(MonitorValueGroup mvg:list){
-			if(map.get(mvg.getMonitorID())==id){
-				typeList.add(mvg);
+		List<IndicatorInfo> ilist= indicateDao.getAll();
+		List<MonitorValueGroup>  list = new  ArrayList<MonitorValueGroup>();
+
+		for(IndicatorInfo i:indicateDao.getAll()){
+			if(i.getIndicateGroupID()==id){
+				MonitorValueGroup mvg = new MonitorValueGroup();
+				mvg.setMonitorID(i.getIndicateID());
+				mvg.setMonitorName(i.getIndicateName());
+				mvg.setMonitorUnit(i.getUnit());
+				mvg.setMonitorValue("");
+				list.add(mvg);
 			}
 		}
-		return typeList;
+		
+
+		return list;
 	}
 
 

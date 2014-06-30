@@ -12,8 +12,6 @@ public interface SystemBasicService
 
 	DefaultTreeModel  LoadBaseSiteTree();
 
-	Map<Integer, Integer> loadIndicatorTypeMap();
-
 	List<MonitorValueGroup> loadMonitorList(int basicInfoId);
 
 }
