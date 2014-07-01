@@ -12,8 +12,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import cn.fuego.dms.service.DataCollectorService;
 import cn.fuego.dms.service.model.Collection;
+import cn.fuego.dms.service.model.Resource;
 
 /** 
  * @ClassName: DataCollector 
@@ -25,8 +29,10 @@ import cn.fuego.dms.service.model.Collection;
 
 public class DataCollectorImpl implements DataCollectorService
 {
+	private Log log = LogFactory.getLog(DataCollectorImpl.class);
+
 	/* data collector period*/
-	private int period = 15; //unit is second
+	private int period = 30; //unit is second
 	
 	private Timer timer; 
 	
@@ -36,7 +42,7 @@ public class DataCollectorImpl implements DataCollectorService
 	
 	public void modifyPeriod(int period)
 	{
-		
+		this.period = period;
 	}
 	
 	public void start()
@@ -51,11 +57,13 @@ public class DataCollectorImpl implements DataCollectorService
 	
 	public Collection getCurCollection()
 	{
-		return collectorTask.getCurCollection();
+		Collection collection = collectorTask.getCurCollection();
+		log.info(collection);
+		return collection;
 	}
 	public void stop()
 	{
 		timer.cancel();
 	}
-
+ 
 }

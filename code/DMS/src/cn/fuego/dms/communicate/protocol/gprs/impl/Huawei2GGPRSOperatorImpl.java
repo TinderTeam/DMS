@@ -32,6 +32,8 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 	private Log log = LogFactory.getLog(Huawei2GGPRSOperatorImpl.class);
 
 	private Communicator communicator = CommunicatorFactory.getInstance().getCommunicator();
+	
+	private boolean IS_OPEN_IPEN_MODE = false; 
 	/* (non-Javadoc)
 	 * @see cn.fuego.dms.service.collector.gprs.GPRSOperate#initGPRS()
 	 */
@@ -176,11 +178,14 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		
 		sendCmd(GPRSCmdConst.SET_PROFILE_CONN_NUM,2);
 		
-		//for the open command,there are some message after OK message
+		//open the connection
 		sendCmd(GPRSCmdConst.OPEN_PROFILE_CONN,2);
+		
+		//for the open command,there are some message after OK message
 		communicator.readData(GPRSCmdConst.END_FLAG);
 		communicator.readData(GPRSCmdConst.END_FLAG);
 
+		this.openIpenTrans();
 		
 	}
 	private boolean isGPRSOK()
@@ -265,14 +270,22 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		return netName;
 		
 	}
-
-	/* (non-Javadoc)
-	 * @see cn.fuego.dms.service.collector.gprs.GPRSOperate#sendData(java.lang.String)
-	 */
-	@Override
 	public void sendData(String message)
 	{
 		log.info("send message is :"+message);
+
+		if(this.IS_OPEN_IPEN_MODE)
+		{
+			this.sendDataIpenMode(message);
+		}
+		else
+		{
+			this.sendDataATMode(message);
+		}
+	}
+ 
+	private void sendDataATMode(String message)
+	{
 		if(null == message || message.length() == 0)
 		{
 			log.warn("the message is empty, no need to send");
@@ -314,11 +327,29 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.fuego.dms.service.collector.gprs.GPRSOperate#readData()
-	 */
-	@Override
 	public String readData(int length)
+	{
+		if(this.IS_OPEN_IPEN_MODE)
+		{
+			return this.readDataIpenMode(length);
+		}
+		else
+		{	
+			return this.readDataATMode(length);
+		}
+	}
+ 
+	public String readData(String end)
+	{
+		if(this.IS_OPEN_IPEN_MODE)
+		{
+			return this.readDataIpenMode(end);
+		}
+		log.error("can not read by end flag, with AT mode");
+		return null;
+	}
+	
+	public String readDataATMode(int length)
 	{
 		log.info("waiting to read data now. length is " + length);
 		String result = "";
@@ -383,5 +414,49 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		this.communicator.close();
 		
 	}
+	
+	/**
+	 * 
+	 */
+	public void openIpenTrans()
+	{
+		sendCmd(GPRSCmdConst.SET_IPEN_TRANS_PARA);
+		sendCmd(GPRSCmdConst.OPEN_IPEN_TRANS);
+
+		this.IS_OPEN_IPEN_MODE = true;
+		log.info("set the data transmit mode is ipen trans mode.");
+
+	}
+	
+	public void closeIpenTrans()
+	{
+		communicator.sendData(GPRSCmdConst.CLOSE_IPEN_TRANS);
+		try
+		{
+			log.info("wait 1.5s for close ipen trans.");
+			Thread.sleep(1500);
+		}
+		catch (InterruptedException e)
+		{
+			log.error("sleep interruted exception.",e);
+		}
+		this.IS_OPEN_IPEN_MODE = false;
+
+	}
+	private void sendDataIpenMode(String message)
+	{
+		communicator.sendData(message);
+	}
+	private String readDataIpenMode(String end)
+	{
+		String message = this.communicator.readData(end);
+		return message;
+	}
+	private String readDataIpenMode(int length)
+	{
+		String message = this.communicator.readData(length);
+		return message;
+	}
+
 
 }

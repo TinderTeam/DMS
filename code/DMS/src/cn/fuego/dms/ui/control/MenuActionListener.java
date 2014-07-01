@@ -7,16 +7,13 @@ import javax.swing.JMenuItem;
 
 import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
 import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
-import cn.fuego.dms.service.DataCollectorService;
-import cn.fuego.dms.service.impl.DataCollectionServiceImpl;
 import cn.fuego.dms.ui.frame.AboutUsDialog;
 import cn.fuego.dms.ui.frame.MainJFrame;
 
 public class MenuActionListener implements  ActionListener
 
 {
-	DataCollectorService dataCollectionServcie = new DataCollectionServiceImpl();	
-	static MenuActionListener listner;
+ 	static MenuActionListener listner;
 	MainJFrame frame;
 	
 	public MenuActionListener(MainJFrame jfm){

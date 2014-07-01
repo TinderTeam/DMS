@@ -20,6 +20,9 @@ public class PropertyItemNameConst
 {
 	public static final String SERVER_IP = "SERVER_IP";
 	public static final String SERVER_PORT = "SERVER_PORT";
-	public static final String CONMMUNICATOR_PORT ="SERVER_PORT";
-	
+	public static final String CONMMUNICATOR_PORT ="CONMMUNICATOR_PORT";
+	public static final String VERSION_NUM= "VERSION_NUM";
+	public static final String PRODUCT_NAME= "PRODUCT_NAME";
+
+ 	
 }

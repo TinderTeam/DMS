@@ -35,6 +35,11 @@ public class GPRSCmdConst
 	public static final String OPEN_PROFILE_CONN = "AT^SISO=0";
 	public static final String CLOSE_PROFILE_CONN = "AT^SISC=0";
 	
+	public static final String OPEN_IPEN_TRANS = "AT^IPENTRANS=0";
+	public static final String SET_IPEN_TRANS_PARA = "AT^IPCFL=10,1";
+	public static final String CLOSE_IPEN_TRANS = "+++";
+
+	
 	public static final String SEND_DATA_CMD = "AT^SISW=0,";
 	public static final String READ_DATA_CMD = "AT^SISR=0,";
 

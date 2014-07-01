@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.fuego.dms.communicate.exception.CommunicateException;
 import cn.fuego.dms.communicate.physical.Communicator;
-import cn.fuego.dms.util.validate.ValidatorUtil;
 
 /**
  * @ClassName: UartCommunicatorImpl
@@ -326,8 +325,9 @@ public class UartCommunicatorImpl  implements Communicator, SerialPortEventListe
 				while((ch=inputStream.read()) > 0) 
 				{   
 					messageBuffer.append((char)ch);
-					
+					//log.info("reading from port," + messageBuffer.toString());	
 				}   
+				
 			}
 			catch (IOException e)
 			{

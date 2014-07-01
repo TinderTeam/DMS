@@ -5,7 +5,6 @@
 package cn.fuego.dms.util.file.property;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -56,25 +55,10 @@ public class PropertyReader
 		return instance;
 	}
 
-	public String getPropertyByName(String name)
-	{
-		 prop = new Properties();
-         InputStream inStream = PropertyReader.class.getClassLoader()
-                 .getResourceAsStream(CONFIG_PATH);
-         try
-		{
-			prop.load(inStream);
-			return prop.getProperty(name);
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-         
-	
-	}
-
+    public String getPropertyByName(String name)
+    {
+        return prop.getProperty(name);
+    }
 
     
  

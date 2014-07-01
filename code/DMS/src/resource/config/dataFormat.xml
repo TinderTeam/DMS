@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataFormatList>
+	<DataFormat seq="1" dataLength="2" indicatorID='3'></DataFormat>
+	<DataFormat seq="2" dataLength='1' indicatorID='4'></DataFormat>
+	<DataFormat seq="3" dataLength='1' indicatorID='5'></DataFormat>
+	<DataFormat seq="4" dataLength='1' indicatorID='6'></DataFormat>
+	<DataFormat seq="5" dataLength='1' indicatorID='7'></DataFormat>
+	<DataFormat seq="6" dataLength='1' indicatorID='8'></DataFormat>
+	<DataFormat seq="7" dataLength='1' indicatorID='9'></DataFormat>
+	<DataFormat seq="8" dataLength='1' indicatorID='10'></DataFormat>
+    <DataFormat seq="9" dataLength='1' indicatorID='11'></DataFormat>
+	
+</DataFormatList>

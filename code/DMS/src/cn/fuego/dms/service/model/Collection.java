@@ -46,6 +46,16 @@ public class Collection
 		return "Collection [resourceList=" + resourceList + ", collectTime=" + collectTime + "]";
 	}
 	
-	
+	public Resource getResourceByResID(String resID)
+	{
+		for(Resource resource : resourceList)
+		{
+			if(resource.getResID().equals(resID))
+			{
+				return resource;
+			}
+		}
+		return null;
+	}
 	
 }

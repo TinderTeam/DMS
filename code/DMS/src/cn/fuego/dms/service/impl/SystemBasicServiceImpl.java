@@ -56,8 +56,4 @@ public class SystemBasicServiceImpl implements SystemBasicService
 
 		return list;
 	}
-
-
-
-
 }

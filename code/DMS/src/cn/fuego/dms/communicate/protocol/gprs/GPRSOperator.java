@@ -31,6 +31,8 @@ public interface GPRSOperator
 	public void sendData(String message);
 	
 	public String readData(int length);
+	public String readData(String end);
+
 	
 
 }

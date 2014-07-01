@@ -13,27 +13,26 @@ import cn.fuego.dms.dao.constant.XMLPathConstant;
 
 public class XMLReader
 {
-	
+
 	Visitor visitor;
-	public XMLReader(String Path,Visitor vst) throws Exception{
-		if(vst==null){
-			throw new Exception("visitor is null");
+
+	public XMLReader(String Path, Visitor vst) throws DocumentException
+	{
+		if (vst == null)
+		{
+
 		}
-		visitor=vst;
+		visitor = vst;
 		SAXReader reader = new SAXReader();
-	    try
+
+		Document document = reader.read(new File(Path));
+		Element root = document.getRootElement();
+
+		for (Iterator<?> i = root.elementIterator(); i.hasNext();)
 		{
-			Document document = reader.read(new File(Path));
-			Element root=document.getRootElement();
-			
-			for (Iterator<?> i = root.elementIterator(); i.hasNext();) {
-			     Element element = (Element) i.next();
-			     element.accept(visitor);
-			}
-		} catch (DocumentException e)
-		{
-			e.printStackTrace();
+			Element element = (Element) i.next();
+			element.accept(visitor);
 		}
-	     
+
 	}
 }
