@@ -12,54 +12,56 @@ import cn.fuego.dms.ui.frame.MainJFrame;
 import cn.fuego.dms.util.file.property.PropertyItemNameConst;
 import cn.fuego.dms.util.file.property.PropertyReader;
 
-
- 
 public class UIController extends Thread
 {
 	private Log log = LogFactory.getLog(UIController.class);
 	DataCollectorService dataCollectionServcie = ServiceContext.getInstance().getCollectorService();
-	
-	int REFRASH_RATE=10000;
+
+	int REFRASH_RATE = 10000;
 	private MainJFrame frame;
-	public UIController(MainJFrame mainFrame){
+
+	public UIController(MainJFrame mainFrame)
+	{
 		super();
 		log.info("start");
-		frame=mainFrame;
+		frame = mainFrame;
 		initGPRS();
-		
+
 		this.start();
 	}
-	
-	
+
 	private void initGPRS()
 	{
-		GPRSOperator gprsOperator =GPRSFactory.getInstance().getGPRSOperator(); 
-		
-		try{
-			gprsOperator.initGPRS(
-					PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.SERVER_IP),
-					PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.SERVER_PORT),
+		GPRSOperator gprsOperator = GPRSFactory.getInstance().getGPRSOperator();
+
+		try
+		{
+			gprsOperator.initGPRS(PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.SERVER_IP), PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.SERVER_PORT),
 					PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.CONMMUNICATOR_PORT));
-		}catch(Exception ex){
+		}
+		catch (Exception ex)
+		{
 			log.error("GPRS初始化失败");
 		}
 		dataCollectionServcie.start();
-		
+
 	}
 
-
 	@Override
-	public void run(){
-		while(true){			
+	public void run()
+	{
+		while (true)
+		{
 			try
 			{
 				Collection collection = dataCollectionServcie.getCurCollection();
-				if(null != collection)
+				if (null != collection)
 				{
-					frame.updateData(collection.getResourceByResID(frame.getSelectedBaseSite()));			
+					frame.updateData(collection.getResourceByResID(frame.getSelectedBaseSite()));
 				}
 				UIController.sleep(REFRASH_RATE);
-			} catch (InterruptedException e)
+			}
+			catch (InterruptedException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();

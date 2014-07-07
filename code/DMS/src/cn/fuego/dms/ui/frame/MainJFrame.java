@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.security.Provider.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,8 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
 import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
+import cn.fuego.dms.dao.DaoContext;
+import cn.fuego.dms.service.ServiceContext;
 import cn.fuego.dms.service.SystemBasicService;
 import cn.fuego.dms.service.impl.SystemBasicServiceImpl;
 import cn.fuego.dms.service.model.Indicator;
@@ -52,7 +55,7 @@ public class MainJFrame extends JFrame
 	private JPanel contentPane;
 
 	static Log log = LogFactory.getLog(MainJFrame.class);
-	SystemBasicService contextService = new SystemBasicServiceImpl();
+	SystemBasicService contextService = ServiceContext.getInstance().getSystemBasicService();
 
 	private String selectedBaseSite; // 选中的对象
 	private JLabel lblServer;
@@ -66,16 +69,6 @@ public class MainJFrame extends JFrame
 	 */
 	public MainJFrame()
 	{
-		addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosed(WindowEvent e)
-			{
-				GPRSOperator gprsOperator = GPRSFactory.getInstance().getGPRSOperator();
-				gprsOperator.closeGPRS();
-				System.exit(0);
-			}
-		});
 		initFont();
 		ImageIcon icon = new ImageIcon("icon\\icon-success.jpg");
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainJFrame.class.getResource("/resource/icon.png")));
@@ -233,6 +226,26 @@ public class MainJFrame extends JFrame
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_12.add(lblNewLabel);
 
+		
+		addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent event)
+			{
+				GPRSOperator gprsOperator = GPRSFactory.getInstance().getGPRSOperator();
+				
+				try
+				{
+					gprsOperator.closeGPRS();
+				}
+				catch(Exception e)
+				{
+					log.error("colse gprs failed",e);
+				}
+				log.info("system exist now");
+				System.exit(0);
+			}
+		});
 		UIController uic = new UIController(this);
 	}
 
