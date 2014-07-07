@@ -18,7 +18,7 @@ import java.util.List;
  *  
  */
 
-public interface Communicator
+public interface PhysicalChannel
 {
 	public void init(String portName);
 	public List<String> getPortList();

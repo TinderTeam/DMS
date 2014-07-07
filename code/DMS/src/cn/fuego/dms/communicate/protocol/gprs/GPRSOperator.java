@@ -18,6 +18,7 @@ package cn.fuego.dms.communicate.protocol.gprs;
 
 public interface GPRSOperator
 {
+ 
 	public void initGPRS(String serverIP,String serverPort,String communicatorPort);
 	
 	public void closeGPRS();
@@ -31,8 +32,6 @@ public interface GPRSOperator
 	public void sendData(String message);
 	
 	public String readData(int length);
-	public String readData(String end);
-
-	
+	public String readData(String end);	
 
 }

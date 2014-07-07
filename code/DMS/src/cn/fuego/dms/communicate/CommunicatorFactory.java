@@ -6,7 +6,7 @@
 * @date 2014-6-26 上午10:52:00 
 * @version V1.0   
 */ 
-package cn.fuego.dms.communicate.physical;
+package cn.fuego.dms.communicate;
 
 import cn.fuego.dms.communicate.physical.impl.UartCommunicatorImpl;
 
@@ -40,7 +40,7 @@ public class CommunicatorFactory
 	{
 		if(null == communicator)
 		{
-			communicator = new UartCommunicatorImpl();
+			communicator = new GPRSCommunicatorimpl();
 		}
 		
 		return communicator;

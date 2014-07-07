@@ -14,8 +14,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.fuego.dms.communicate.exception.CommunicateException;
-import cn.fuego.dms.communicate.physical.Communicator;
-import cn.fuego.dms.communicate.physical.CommunicatorFactory;
+import cn.fuego.dms.communicate.physical.PhysicalChannel;
+import cn.fuego.dms.communicate.physical.PhysicalChannelFactory;
 import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
 import cn.fuego.dms.util.validate.ValidatorUtil;
 
@@ -31,7 +31,7 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 {
 	private Log log = LogFactory.getLog(Huawei2GGPRSOperatorImpl.class);
 
-	private Communicator communicator = CommunicatorFactory.getInstance().getCommunicator();
+	private PhysicalChannel communicator = PhysicalChannelFactory.getInstance().getCommunicator();
 	
 	private boolean IS_OPEN_IPEN_MODE = false; 
 	/* (non-Javadoc)

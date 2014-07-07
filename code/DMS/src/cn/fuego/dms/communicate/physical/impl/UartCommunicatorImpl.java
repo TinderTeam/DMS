@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.fuego.dms.communicate.exception.CommunicateException;
-import cn.fuego.dms.communicate.physical.Communicator;
+import cn.fuego.dms.communicate.physical.PhysicalChannel;
 
 /**
  * @ClassName: UartCommunicatorImpl
@@ -40,7 +40,7 @@ import cn.fuego.dms.communicate.physical.Communicator;
  * 
  */
 
-public class UartCommunicatorImpl  implements Communicator, SerialPortEventListener
+public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventListener
 {
 	private Log log = LogFactory.getLog(UartCommunicatorImpl.class);
 
