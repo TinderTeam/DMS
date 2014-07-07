@@ -7,11 +7,16 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.Dialog.ModalityType;
 import java.awt.Toolkit;
 import java.awt.Window.Type;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
+import cn.fuego.dms.ui.constant.UIConstant;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -27,10 +32,12 @@ public class WarningDialog extends JDialog
 	public WarningDialog(String msg)
 	{
 		setTitle("警告");
+		this.setSize(450,300);
+		this.setLocation((int)( UIConstant.SCR_WIDTH -450)/2, (int)(UIConstant.SCR_HEIGHT-300)/2);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WarningDialog.class.getResource("/resource/icon.png")));
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

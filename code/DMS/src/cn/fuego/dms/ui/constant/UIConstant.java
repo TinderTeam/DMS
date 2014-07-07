@@ -1,5 +1,7 @@
 package cn.fuego.dms.ui.constant;
 
+import java.awt.Toolkit;
+
 
 public class UIConstant
 {
@@ -9,7 +11,8 @@ public class UIConstant
 	public static final int ENTRANCE_ID =3;
 	public static final int BATTERY_ID =4;
 	public static final int SENSER_ID =5;
-	
+	public static final double SCR_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+	public static final double SCR_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	public static final String BASESIT_INFO="基站信息";
 	public static final String MONITOR_VALUE="监控指标";
 	public static final String NO_SIGNAL = "无信号";

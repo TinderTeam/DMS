@@ -1,12 +1,17 @@
 package cn.fuego.dms.ui.frame;
 
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -28,7 +33,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,8 +52,6 @@ import cn.fuego.dms.ui.model.BaseSiteTreeItem;
 import cn.fuego.dms.ui.model.MonitorValueGroup;
 import cn.fuego.dms.ui.model.MonitorView;
 import cn.fuego.dms.util.SystemConfigInfo;
-import cn.fuego.dms.util.file.property.PropertyItemNameConst;
-import cn.fuego.dms.util.file.property.PropertyReader;
 
 /**
  * 
@@ -81,35 +83,57 @@ public class MainJFrame extends JFrame
 	private JTree treeBaseSite;
 	private UIController uic;
 	
+	LoadWindow loadWindow;
 	
 	/**
 	 * Create the frame.
 	 */
 	public MainJFrame()
 	{
+		loadWindow = new LoadWindow();
+			
+		
+		
 		//basic init
-		initFont();
-		initIcon();
-		initMainFramePara();
 
+		initFont();
+		loadWindow.nextStep();
+		initIcon();
+		loadWindow.nextStep();
+		initMainFramePara();
+		loadWindow.nextStep();
+		
+	
 		//content init
 
 		//menu
 		initMenu();
-		
+		loadWindow.nextStep();
 		//layout
 			//WestPanel
 		initWestPanel();
+		loadWindow.nextStep();
 		initCenterPanel();
+		loadWindow.nextStep();
 		initSouthPanel();
+		loadWindow.nextStep();
 		
 		//listener 
 		addListener();
-		
+		loadWindow.nextStep();
+	
 		//start Controller
 		startController();
+		loadWindow.nextStep();	
 		
+		
+
 	}
+
+
+
+	
+
 
 	public void startController()
 	{
@@ -122,7 +146,6 @@ public class MainJFrame extends JFrame
 		{
 			updateSignal(0,UIConstant.NO_SERVER);
 			WarningDialog dailog=new WarningDialog(ex.getMessage());	
-			
 			dailog.setVisible(true);
 		}
 	}
@@ -303,6 +326,7 @@ public class MainJFrame extends JFrame
 		setTitle(SystemConfigInfo.getProductName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1024, 768);
+		this.setLocation((int)( UIConstant.SCR_WIDTH -1024)/2, (int)(UIConstant.SCR_HEIGHT-768)/2);
 	}
 
 	/*
