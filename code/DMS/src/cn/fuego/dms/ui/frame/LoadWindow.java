@@ -5,27 +5,14 @@ package cn.fuego.dms.ui.frame;
  */
 
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.SplashScreen;
-import java.awt.Toolkit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
-
-import org.junit.Test;
 
 import cn.fuego.dms.ui.constant.UIConstant;
 

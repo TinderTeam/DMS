@@ -1,6 +1,6 @@
 package cn.fuego.dms.ui.model;
 
-public class MonitorValueGroup
+public class MonitorValue
 {
 	private int	monitorID;
 	private String monitorName;

@@ -8,8 +8,6 @@
 */ 
 package cn.fuego.dms.communicate.protocol.gprs.impl;
 
-import javax.xml.bind.ValidationEvent;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,6 +32,9 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 	private PhysicalChannel communicator = PhysicalChannelFactory.getInstance().getCommunicator();
 	
 	private boolean IS_OPEN_IPEN_MODE = false; 
+	
+	private int sigStrength = 0;
+	private String connNetName = "";
 	/* (non-Javadoc)
 	 * @see cn.fuego.dms.service.collector.gprs.GPRSOperate#initGPRS()
 	 */
@@ -121,7 +122,7 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		communicator.init(communicatorPort);
 		try
 		{
-			closeGPRS();
+			sendCmd(GPRSCmdConst.CLOSE_PROFILE_CONN,2);
 		}
 		catch(CommunicateException e)
 		{
@@ -190,6 +191,7 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 	}
 	private boolean isGPRSOK()
 	{
+		loadConnectInfo();
 		boolean isOK = true;
 		
 		try
@@ -222,6 +224,11 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 	@Override
 	public int getSignalInfo()
 	{
+		return sigStrength;
+	}
+
+	public void loadConnectInfo()
+	{
 		// TODO Auto-generated method stub
 		String signalInfo = this.readDataByCmd(GPRSCmdConst.CHECK_SINGAL);
 		
@@ -243,15 +250,9 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		
 		log.info("the signal is " + sigStrength);
 		
-		return sigStrength;
-	}
-
-	/* (non-Javadoc)
-	 * @see cn.fuego.dms.service.collector.gprs.GPRSOperate#getNeworkInfo()
-	 */
-	@Override
-	public String getConnNetName()
-	{
+		this.sigStrength = sigStrength;
+	 
+		//load connect network information
 		String netInfo = this.readDataByCmd(GPRSCmdConst.CHECK_NET_INFO);
 
 		String splitFlag ="\"";
@@ -266,10 +267,18 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		{
 			log.error("can not get connect net information. netInfo is : "  + netInfo);
 		}
-		
-		return netName;
-		
+		this.connNetName = netName;
 	}
+ 
+	/* (non-Javadoc)
+	 * @see cn.fuego.dms.service.collector.gprs.GPRSOperate#getNeworkInfo()
+	 */
+	@Override
+	public String getConnNetName()
+	{
+		return this.connNetName;
+	}
+ 
 	public void sendData(String message)
 	{
 		log.info("send message is :"+message);
@@ -400,24 +409,28 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 	@Override
 	public void closeGPRS()
 	{
-		sendCmd(GPRSCmdConst.CLOSE_PROFILE_CONN,2);
- 
+		if(this.IS_OPEN_IPEN_MODE)
+		{
+			this.closeIpenTrans();
+		}
 		
+		try
+		{
+			sendCmd(GPRSCmdConst.CLOSE_PROFILE_CONN,2);
+		}
+		catch(CommunicateException e)
+		{
+			log.error("close grps failed.");
+			throw e;
+		}
+		finally
+		{
+			this.communicator.close();
+		}
+ 
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.fuego.dms.communicate.protocol.gprs.GPRSOperator#closePhysicalPort()
-	 */
-	@Override
-	public void closePhysicalPort()
-	{
-		this.communicator.close();
-		
-	}
-	
-	/**
-	 * 
-	 */
+ 
 	public void openIpenTrans()
 	{
 		sendCmd(GPRSCmdConst.SET_IPEN_TRANS_PARA);
@@ -440,6 +453,8 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		{
 			log.error("sleep interruted exception.",e);
 		}
+		this.communicator.readData(GPRSCmdConst.END_FLAG);
+ 		this.readOKFlag();
 		this.IS_OPEN_IPEN_MODE = false;
 
 	}

@@ -54,6 +54,7 @@ public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventLi
 
 	private int baudRate = 115200;
 
+	private boolean isOpen = false;
 
 	private StringBuffer messageBuffer = new StringBuffer();
  

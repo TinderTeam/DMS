@@ -13,7 +13,7 @@ public interface DataCollectorService
 	
 	public int getSignalInfo();
 	
-	public String getConnNetName();
+	public String getServerName();
  
 
 }	

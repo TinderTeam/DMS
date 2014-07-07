@@ -3,7 +3,7 @@ package cn.fuego.dms.ui.model;
 import javax.swing.JLabel;
 
 
-public class MonitorView
+public class IndicatorViewComponent
 {
 	private JLabel monitorName;
 	private JLabel monitorValue;

@@ -1,17 +1,11 @@
 package cn.fuego.dms.ui.frame;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.SystemColor;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -37,64 +31,61 @@ import javax.swing.event.TreeSelectionListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
-import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
 import cn.fuego.dms.domain.po.IndicatorGroup;
 import cn.fuego.dms.service.DataCollectorService;
 import cn.fuego.dms.service.ServiceContext;
 import cn.fuego.dms.service.SystemBasicService;
+import cn.fuego.dms.service.model.Collection;
 import cn.fuego.dms.service.model.Indicator;
 import cn.fuego.dms.service.model.Resource;
 import cn.fuego.dms.ui.constant.UIConstant;
 import cn.fuego.dms.ui.control.MenuActionListener;
 import cn.fuego.dms.ui.control.UIController;
 import cn.fuego.dms.ui.model.BaseSiteTreeItem;
-import cn.fuego.dms.ui.model.MonitorValueGroup;
-import cn.fuego.dms.ui.model.MonitorView;
+import cn.fuego.dms.ui.model.IndicatorViewComponent;
+import cn.fuego.dms.ui.model.MonitorValue;
 import cn.fuego.dms.util.SystemConfigInfo;
 
 /**
  * 
-* @ClassName: MainJFrame 
-* @Description: TODO
-* @author Nan Bowen
-* @date 2014-7-7 上午09:29:59 
-*
+ * @ClassName: MainJFrame
+ * @Description: TODO
+ * @author Nan Bowen
+ * @date 2014-7-7 上午09:29:59
+ * 
  */
 public class MainJFrame extends JFrame
 {
-	//Log
+	// Log
 	static Log log = LogFactory.getLog(MainJFrame.class);
-	//Service
+	// Service
 	SystemBasicService contextService = ServiceContext.getInstance().getSystemBasicService();
-	DataCollectorService collectorServic = ServiceContext.getInstance().getCollectorService();
-	//Para
+	DataCollectorService collectorService = ServiceContext.getInstance().getCollectorService();
+	// Para
 	private String selectedBaseSite; // Selected basesite
-	private Map<Integer, MonitorView> monitorMap = new HashMap<Integer, MonitorView>();	//monitorMap  to find the compoment
-	
-	//Constant
-	String iconPath="/resource/icon.png";
-	//Content
-	private JPanel contentPane;	//Basic contentPanel
-	
-	//Component
+	private Map<Integer, IndicatorViewComponent> monitorMap = new HashMap<Integer, IndicatorViewComponent>(); // monitorMap to find the compoment
+
+	// Constant
+	String iconPath = "/resource/icon.png";
+	// Content
+	private JPanel contentPane; // Basic contentPanel
+
+	// Component
 	private JLabel lblServer;
 	private JLabel lblSignal;
-	private JTree treeBaseSite;
+	private BaseSiteTree baseSiteTree;
 	private UIController uic;
-	
+
 	LoadWindow loadWindow;
-	
+
 	/**
 	 * Create the frame.
 	 */
 	public MainJFrame()
 	{
 		loadWindow = new LoadWindow();
-			
-		
-		
-		//basic init
+
+		// basic init
 
 		initFont();
 		loadWindow.nextStep();
@@ -102,66 +93,69 @@ public class MainJFrame extends JFrame
 		loadWindow.nextStep();
 		initMainFramePara();
 		loadWindow.nextStep();
-		
-	
-		//content init
 
-		//menu
+		// content init
+
+		// menu
 		initMenu();
 		loadWindow.nextStep();
-		//layout
-			//WestPanel
+		// layout
+		// WestPanel
 		initWestPanel();
 		loadWindow.nextStep();
 		initCenterPanel();
 		loadWindow.nextStep();
 		initSouthPanel();
 		loadWindow.nextStep();
-		
-		//listener 
+
+		// listener
 		addListener();
 		loadWindow.nextStep();
-	
-		//start Controller
+
+		// start Controller
 		startController();
-		loadWindow.nextStep();	
-		
-		
+		loadWindow.nextStep();
 
 	}
-
-
-
-	
-
 
 	public void startController()
 	{
 		uic = new UIController(this);
 		try
 		{
-			uic.initGPRS();
-			updateSignal(collectorServic.getSignalInfo(), collectorServic.getConnNetName());
-		}catch(RuntimeException ex)
+			collectorService.start();
+			uic.start();
+			updateSignal(collectorService.getSignalInfo(), collectorService.getServerName());
+		}
+		catch (RuntimeException ex)
 		{
-			updateSignal(0,UIConstant.NO_SERVER);
-			WarningDialog dailog=new WarningDialog(ex.getMessage());	
+			updateSignal(0, UIConstant.NO_SERVER);
+			WarningDialog dailog = new WarningDialog(ex.getMessage());
 			dailog.setVisible(true);
 		}
 	}
 
 	public void updateSignal(int i, String server)
 	{
-		
-		if(i==0||i==99){
+
+		if (i == 0 || i == 99)
+		{
 			lblSignal.setText(UIConstant.NO_SIGNAL);
-		}else if(i>0 && i<11){
+		}
+		else if (i > 0 && i < 11)
+		{
 			lblSignal.setText(UIConstant.LOW_SIGNAL);
-		}else if(i>10 && i<21){
+		}
+		else if (i > 10 && i < 21)
+		{
 			lblSignal.setText(UIConstant.MID_SIGNAL);
-		}else if(i>10 && i<21){
+		}
+		else if (i > 10 && i < 21)
+		{
 			lblSignal.setText(UIConstant.MID_SIGNAL);
-		}else if(i>20 && i<=31){
+		}
+		else if (i > 20 && i <= 31)
+		{
 			lblSignal.setText(UIConstant.HIGH_SIGNAL);
 		}
 		lblServer.setText(server);
@@ -175,20 +169,20 @@ public class MainJFrame extends JFrame
 			@Override
 			public void windowClosing(WindowEvent event)
 			{
-				GPRSOperator gprsOperator = GPRSFactory.getInstance().getGPRSOperator();
-				
+
 				try
 				{
-					gprsOperator.closeGPRS();
+					uic.stopThread();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					log.error("colse gprs failed",e);
+					log.error("stop collector", e);
 				}
 				log.info("system exist now");
 				System.exit(0);
 			}
 		});
+
 	}
 
 	private void initSouthPanel()
@@ -215,31 +209,28 @@ public class MainJFrame extends JFrame
 
 	private void initCenterPanel()
 	{
-		//panel
+		// panel
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
 		panel_1.setBorder(new TitledBorder(null, UIConstant.MONITOR_VALUE, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new GridLayout(5, 0, 0, 0));
 
-		
-
-		
 		List<IndicatorGroup> groupList = contextService.loadMonitorGroupList();
-		
-	  
-		for(IndicatorGroup ig:groupList){
+
+		for (IndicatorGroup ig : groupList)
+		{
 			JPanel panel_box = new JPanel();
-			    panel_box.setBackground(Color.WHITE);
-			    panel_box.setBorder(new EmptyBorder(10, 10, 10, 0));
-				panel_1.add(panel_box);
-				panel_box.setLayout(new BorderLayout(0, 0));
-				JPanel basicInfoPanel = new JPanel();
-				basicInfoPanel.setBackground(Color.WHITE);
-				basicInfoPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), ig.getIndicateGroupName(), TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_box.add(basicInfoPanel);
-				basicInfoPanel.setLayout(new GridLayout(0, 4, 0, 0));
-				loadLbl(basicInfoPanel, ig.getIndicateGroupID());
+			panel_box.setBackground(Color.WHITE);
+			panel_box.setBorder(new EmptyBorder(10, 10, 10, 0));
+			panel_1.add(panel_box);
+			panel_box.setLayout(new BorderLayout(0, 0));
+			JPanel basicInfoPanel = new JPanel();
+			basicInfoPanel.setBackground(Color.WHITE);
+			basicInfoPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), ig.getIndicateGroupName(), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panel_box.add(basicInfoPanel);
+			basicInfoPanel.setLayout(new GridLayout(0, 4, 0, 0));
+			loadLbl(basicInfoPanel, ig.getIndicateGroupID());
 		}
 	}
 
@@ -248,40 +239,41 @@ public class MainJFrame extends JFrame
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
+
+		setContentPane(contentPane);
 
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		
+
 		panel.setBorder(new TitledBorder(null, UIConstant.BASESIT_INFO, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panel, BorderLayout.WEST);
- 
-		JTree tree = new JTree();
-		tree.addTreeSelectionListener(new TreeSelectionListener()
+
+		baseSiteTree = new BaseSiteTree();
+		baseSiteTree.addTreeSelectionListener(new TreeSelectionListener()
 		{
 			public void valueChanged(TreeSelectionEvent e)
 			{
 				JTree a = (JTree) e.getSource();
-				try{
+				try
+				{
 					BaseSiteTreeItem note = (BaseSiteTreeItem) a.getLastSelectedPathComponent();
 					selectedBaseSite = note.getId();
-				}catch(RuntimeException ex){
-					;
+					updateData();
+				}
+				catch (RuntimeException ex)
+				{
+					log.error("error",ex);
 				}
 			}
 		});
 
-		tree.setModel(contextService.LoadBaseSiteTree());
-
-		tree.setFont(new Font("宋体", Font.PLAIN, 13));
-		tree.setForeground(SystemColor.control);
-		tree.setBackground(Color.WHITE);
-		panel.add(tree);
+		
+		panel.add(baseSiteTree);
 	}
 
 	/*
-	 *init menu 
+	 * init menu
 	 */
 	private void initMenu()
 	{
@@ -291,22 +283,20 @@ public class MainJFrame extends JFrame
 		JMenu mnNewMenu = new JMenu("系统");
 		menuBar.add(mnNewMenu);
 		MenuActionListener mls = new MenuActionListener(this);
-		
+
 		JMenuItem mntmRefresh = new JMenuItem("刷新");
 		mntmRefresh.addActionListener(mls);
-		
-		
+
 		mntmRefresh.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/refresh.png")));
 		mnNewMenu.add(mntmRefresh);
 
 		JMenuItem mntmAbout = new JMenuItem("关于DMS...");
 		mntmAbout.addActionListener(mls);
-		
+
 		JMenuItem mntmConnect = new JMenuItem("连接服务器");
 		mnNewMenu.add(mntmConnect);
 		mntmConnect.addActionListener(mls);
-		
-		
+
 		mntmAbout.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/aboutus.png")));
 		mnNewMenu.add(mntmAbout);
 
@@ -319,14 +309,15 @@ public class MainJFrame extends JFrame
 		mnNewMenu.add(mntmExit);
 	}
 
-	/*init mainframe para
-	 * */
+	/*
+	 * init mainframe para
+	 */
 	private void initMainFramePara()
 	{
 		setTitle(SystemConfigInfo.getProductName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1024, 768);
-		this.setLocation((int)( UIConstant.SCR_WIDTH -1024)/2, (int)(UIConstant.SCR_HEIGHT-768)/2);
+		this.setLocation((int) (UIConstant.SCR_WIDTH - 1024) / 2, (int) (UIConstant.SCR_HEIGHT - 768) / 2);
 	}
 
 	/*
@@ -366,9 +357,9 @@ public class MainJFrame extends JFrame
 
 	private void loadLbl(JPanel panel, int id)
 	{
-		List<MonitorValueGroup> list = contextService.loadMonitorList(id);
+		List<MonitorValue> list = contextService.loadMonitorList(id);
 
-		for (MonitorValueGroup mg : list)
+		for (MonitorValue mg : list)
 		{
 			// Create LBL
 			JLabel lbl = new JLabel(mg.getMonitorName() + mg.getMonitorUnit());
@@ -377,111 +368,48 @@ public class MainJFrame extends JFrame
 			lbl.setHorizontalAlignment(JLabel.CENTER);
 			panel.add(lbl);
 			panel.add(lbl2);
-			MonitorView mv = new MonitorView();
+			IndicatorViewComponent mv = new IndicatorViewComponent();
 			mv.setMonitorName(lbl);
 			mv.setMonitorValue(lbl2);
 			monitorMap.put(mg.getMonitorID(), mv);
 		}
 	}
 
-	public void updateData(Resource r)
+	public void updateData()
 	{
-		if (r != null && r.getIndicatorList() != null)
+		Resource resource;
+		Collection collection = collectorService.getCurCollection();
+		if (null != collection)
 		{
-			for (Indicator i : r.getIndicatorList())
+			for(Integer indiID : monitorMap.keySet())
 			{
-				MonitorView mv = monitorMap.get(i.getIndicatorID());
-				if (null != mv)
+				monitorMap.get(indiID).getMonitorValue().setText("");
+			}
+			
+			resource = collection.getResourceByResID(this.selectedBaseSite);
+			
+			if (resource != null && resource.getIndicatorList() != null)
+			{
+				for (Indicator i : resource.getIndicatorList())
 				{
-					mv.getMonitorValue().setText(i.getValue());
+					IndicatorViewComponent mv = monitorMap.get(i.getIndicatorID());
+					if (null != mv)
+					{
+						mv.getMonitorValue().setText(i.getValue());
+					}
 				}
 			}
+			else
+			{
+				log.warn("can not get the data of the resource. the resource id is :" + this.selectedBaseSite);
+			}
 		}
+		else
+		{
+			log.warn("the latest collection is empty");
+		}
+		
 
 	}
-
-	/**
-	 * @return the selectedBaseSite
-	 */
-	public String getSelectedBaseSite()
-	{
-		return selectedBaseSite;
-	}
-
-	/**
-	 * @param selectedBaseSite
-	 *            the selectedBaseSite to set
-	 */
-	public void setSelectedBaseSite(String selectedBaseSite)
-	{
-		this.selectedBaseSite = selectedBaseSite;
-	}
-
-	/**
-	 * @return the lblServer
-	 */
-	public JLabel getLblServer()
-	{
-		return lblServer;
-	}
-
-	/**
-	 * @param lblServer
-	 *            the lblServer to set
-	 */
-	public void setLblServer(JLabel lblServer)
-	{
-		this.lblServer = lblServer;
-	}
-
-	/**
-	 * @return the lblSinal
-	 */
-	public JLabel getLblSinal()
-	{
-		return lblSignal;
-	}
-
-	/**
-	 * @param lblSinal
-	 *            the lblSinal to set
-	 */
-	public void setLblSinal(JLabel lblSinal)
-	{
-		this.lblSignal = lblSinal;
-	}
-
-	/**
-	 * @return the monitorMap
-	 */
-	public Map<Integer, MonitorView> getMonitorMap()
-	{
-		return monitorMap;
-	}
-
-	/**
-	 * @param monitorMap
-	 *            the monitorMap to set
-	 */
-	public void setMonitorMap(Map<Integer, MonitorView> monitorMap)
-	{
-		this.monitorMap = monitorMap;
-	}
-
-	/**
-	 * @return the treeBaseSite
-	 */
-	public JTree getTreeBaseSite()
-	{
-		return treeBaseSite;
-	}
-
-	/**
-	 * @param treeBaseSite
-	 *            the treeBaseSite to set
-	 */
-	public void setTreeBaseSite(JTree treeBaseSite)
-	{
-		this.treeBaseSite = treeBaseSite;
-	}
+ 
 }

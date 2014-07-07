@@ -1,12 +1,9 @@
 package cn.fuego.dms.main;
 
-import java.awt.EventQueue;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.fuego.dms.service.collector.CollectTask;
-import cn.fuego.dms.ui.frame.LoadWindow;
 import cn.fuego.dms.ui.frame.MainJFrame;
 
 public class Main

@@ -10,38 +10,44 @@ import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
 import cn.fuego.dms.ui.frame.AboutUsDialog;
 import cn.fuego.dms.ui.frame.MainJFrame;
 
-public class MenuActionListener implements  ActionListener
+public class MenuActionListener implements ActionListener
 
 {
- 	static MenuActionListener listner;
+	static MenuActionListener listner;
 	MainJFrame frame;
-	
-	public MenuActionListener(MainJFrame jfm){
-		frame=jfm;
-	}
 
+	public MenuActionListener(MainJFrame jfm)
+	{
+		frame = jfm;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		JMenuItem item=(JMenuItem) e.getSource();
+		JMenuItem item = (JMenuItem) e.getSource();
 		System.out.println(item.getActionCommand());
-		
-		if(item.getActionCommand().equals("退出")){
-			GPRSOperator gprsOperator =GPRSFactory.getInstance().getGPRSOperator(); 
-			gprsOperator.closeGPRS();
-			System.exit(0);
-		}else if(item.getActionCommand().equals("刷新")){
+
+		if (item.getActionCommand().equals("退出"))
+		{
 			
-		}else if(item.getActionCommand().equals("关于DMS...")){
-			AboutUsDialog dlg=new AboutUsDialog();
+		}
+		else if (item.getActionCommand().equals("刷新"))
+		{
+
+		}
+		else if (item.getActionCommand().equals("关于DMS..."))
+		{
+			AboutUsDialog dlg = new AboutUsDialog();
 			dlg.setVisible(true);
-		}else if(item.getActionCommand().equals("连接服务器")){
+		}
+		else if (item.getActionCommand().equals("连接服务器"))
+		{
 			frame.startController();
-		}else {
+		}
+		else
+		{
 			;
 		}
 	}
-
 
 }

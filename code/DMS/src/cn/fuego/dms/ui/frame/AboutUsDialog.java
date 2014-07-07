@@ -2,6 +2,7 @@ package cn.fuego.dms.ui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -9,10 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import cn.fuego.dms.ui.control.DailogActionListener;
-
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class AboutUsDialog extends JDialog
 {

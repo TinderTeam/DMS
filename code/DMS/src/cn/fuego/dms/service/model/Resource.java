@@ -63,7 +63,17 @@ public class Resource
 		return "Resource [resID=" + resID + ", resName=" + resName + ", resType=" + resType + ", indicatorList=" + indicatorList + "]";
 	}
 	
-	
+	public Indicator getIndicatorByID(int indicatorID)
+	{
+		for(Indicator indicator:indicatorList)
+		{
+			if(indicatorID == indicator.getIndicatorID())
+			{
+				return indicator;
+			}
+		}
+		return null;
+	}
  	
 
 }

@@ -1,16 +1,13 @@
 package cn.fuego.dms.ui.control;
 
+import java.util.Calendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
-import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
 import cn.fuego.dms.service.DataCollectorService;
 import cn.fuego.dms.service.ServiceContext;
-import cn.fuego.dms.service.model.Collection;
 import cn.fuego.dms.ui.frame.MainJFrame;
-import cn.fuego.dms.util.file.property.PropertyItemNameConst;
-import cn.fuego.dms.util.file.property.PropertyReader;
 
 public class UIController extends Thread
 {
@@ -23,26 +20,15 @@ public class UIController extends Thread
 	public UIController(MainJFrame mainFrame) 
 	{
 		super();
-		log.info("start");
-		frame = mainFrame;
+ 		frame = mainFrame;
 
 	}
 
-	public void initGPRS()
+	public void start()
 	{
-		GPRSOperator gprsOperator = GPRSFactory.getInstance().getGPRSOperator();
 
-		try
-		{
-			gprsOperator.initGPRS(PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.SERVER_IP), PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.SERVER_PORT),
-					PropertyReader.getInstance().getPropertyByName(PropertyItemNameConst.CONMMUNICATOR_PORT));
-		}
-		catch (Exception ex)
-		{
-			log.error("GPRS初始化失败");
-			throw new RuntimeException(ex);
-		}
-		dataCollectionServcie.start();
+		log.info("start");
+		super.start();
 
 	}
 
@@ -51,21 +37,33 @@ public class UIController extends Thread
 	{
 		while (true)
 		{
+			log.info("refresh the data.the time is "+Calendar.getInstance().getTime().toLocaleString());
+		 
 			try
 			{
-				Collection collection = dataCollectionServcie.getCurCollection();
-				if (null != collection)
-				{
-					frame.updateData(collection.getResourceByResID(frame.getSelectedBaseSite()));
-				}
+				frame.updateData();
 				UIController.sleep(REFRASH_RATE);
 			}
 			catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("the sleep interrupt.",e);
+
 			}
 		}
 
+	}
+	
+	 
+	public void stopThread()
+	{
+		try
+		{
+			dataCollectionServcie.stop();
+		}
+		catch(Exception e)
+		{
+			log.error("stop colletor failed",e);
+		}
+		this.stop();
 	}
 }

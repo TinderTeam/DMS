@@ -46,6 +46,10 @@ public interface Communicator
 	 */
 	public String readData(String end);
 	
+	public int getSignalInfo();
+	
+	public String getServerName();
+	
 	public void close();
 	
 }

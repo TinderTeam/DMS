@@ -9,15 +9,19 @@
 package cn.fuego.dms.service.collector;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Timer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.fuego.dms.communicate.Communicator;
+import cn.fuego.dms.communicate.CommunicatorFactory;
+import cn.fuego.dms.communicate.exception.CommunicateException;
 import cn.fuego.dms.service.DataCollectorService;
 import cn.fuego.dms.service.model.Collection;
-import cn.fuego.dms.service.model.Resource;
+import cn.fuego.dms.util.SystemConfigInfo;
+import cn.fuego.dms.util.file.property.PropertyItemNameConst;
+import cn.fuego.dms.util.file.property.PropertyReader;
 
 /** 
  * @ClassName: DataCollector 
@@ -39,7 +43,8 @@ public class DataCollectorImpl implements DataCollectorService
 	private static final int MILLIS_NUM_OF_SEC = 1000;
 	
 	private CollectTask collectorTask = new CollectTask();
-	
+	private Communicator comunicator = CommunicatorFactory.getInstance().getCommunicator();
+
 	public void modifyPeriod(int period)
 	{
 		this.period = period;
@@ -49,16 +54,27 @@ public class DataCollectorImpl implements DataCollectorService
 	
 	public void start()
 	{   
-		
-		
-		timer = new Timer();
-		initTimer();
-		
+
+		try
+		{
+			comunicator.open(SystemConfigInfo.getServerIP(), SystemConfigInfo.getServerPort(), SystemConfigInfo.getCommPort());
+			timer = new Timer();
+			initTimer();
+			
+		}
+		catch(CommunicateException e)
+		{
+			log.error("start collect failed",e);
+			stop();
+			throw e;
+		}
+ 
 	}
+	
 	
 	private void initTimer()
 	{
-         Calendar date = Calendar.getInstance();
+        Calendar date = Calendar.getInstance();
 		
 		long delayTime = this.period - date.get(Calendar.SECOND)%this.period;
 		timer.schedule(collectorTask,delayTime*MILLIS_NUM_OF_SEC,this.period*MILLIS_NUM_OF_SEC);
@@ -72,21 +88,24 @@ public class DataCollectorImpl implements DataCollectorService
 	}
 	public void stop()
 	{
-		timer.cancel();
+		if(null != timer)
+		{
+			timer.cancel();
+		}
+		this.comunicator.close();
 	}
 
 	@Override
 	public int getSignalInfo()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return this.comunicator.getSignalInfo();
 	}
 
 	@Override
-	public String getConnNetName()
+	public String getServerName()
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return this.comunicator.getServerName();
 	}
  
 }

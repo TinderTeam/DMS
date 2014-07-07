@@ -23,8 +23,6 @@ public interface GPRSOperator
 	
 	public void closeGPRS();
 	
-	public void closePhysicalPort();
-	
 	public int getSignalInfo();
 	
 	public String getConnNetName();

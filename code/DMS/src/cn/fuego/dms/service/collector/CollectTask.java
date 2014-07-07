@@ -16,6 +16,8 @@ import java.util.TimerTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.fuego.dms.communicate.Communicator;
+import cn.fuego.dms.communicate.CommunicatorFactory;
 import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
 import cn.fuego.dms.domain.po.DataFormat;
 import cn.fuego.dms.service.cache.DataFormatCache;
@@ -79,9 +81,9 @@ public class CollectTask extends TimerTask
 		
 		sendMessage = ApplicationProtocol.encode(sendMessage);
 		
-		GPRSFactory.getInstance().getGPRSOperator().sendData(sendMessage);
+		CommunicatorFactory.getInstance().getCommunicator().sendData(sendMessage);
 
-		String readMessage = GPRSFactory.getInstance().getGPRSOperator().readData(ApplicationProtocol.PACKET_END);
+		String readMessage = CommunicatorFactory.getInstance().getCommunicator().readData(ApplicationProtocol.PACKET_END);
 		
 		Collection collection = new Collection();
 		if(ApplicationProtocol.isValid(readMessage))

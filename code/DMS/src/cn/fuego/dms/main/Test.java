@@ -90,8 +90,7 @@ public class Test
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		    GPRSFactory.getInstance().getGPRSOperator().closeGPRS();
-			
-			GPRSFactory.getInstance().getGPRSOperator().closePhysicalPort();
+
 		}
 		
 		log.info("system exist");
