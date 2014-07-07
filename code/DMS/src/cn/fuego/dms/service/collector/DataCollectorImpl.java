@@ -43,16 +43,25 @@ public class DataCollectorImpl implements DataCollectorService
 	public void modifyPeriod(int period)
 	{
 		this.period = period;
+		initTimer();
+		
 	}
 	
 	public void start()
 	{   
+		
+		
 		timer = new Timer();
- 		Calendar date = Calendar.getInstance();
+		initTimer();
+		
+	}
+	
+	private void initTimer()
+	{
+         Calendar date = Calendar.getInstance();
 		
 		long delayTime = this.period - date.get(Calendar.SECOND)%this.period;
 		timer.schedule(collectorTask,delayTime*MILLIS_NUM_OF_SEC,this.period*MILLIS_NUM_OF_SEC);
-		
 	}
 	
 	public Collection getCurCollection()
@@ -64,6 +73,20 @@ public class DataCollectorImpl implements DataCollectorService
 	public void stop()
 	{
 		timer.cancel();
+	}
+
+	@Override
+	public int getSignalInfo()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getConnNetName()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
  
 }

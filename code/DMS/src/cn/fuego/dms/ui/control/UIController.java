@@ -20,17 +20,15 @@ public class UIController extends Thread
 	int REFRASH_RATE = 10000;
 	private MainJFrame frame;
 
-	public UIController(MainJFrame mainFrame)
+	public UIController(MainJFrame mainFrame) 
 	{
 		super();
 		log.info("start");
 		frame = mainFrame;
-		initGPRS();
 
-		this.start();
 	}
 
-	private void initGPRS()
+	public void initGPRS()
 	{
 		GPRSOperator gprsOperator = GPRSFactory.getInstance().getGPRSOperator();
 
@@ -42,6 +40,7 @@ public class UIController extends Thread
 		catch (Exception ex)
 		{
 			log.error("GPRS初始化失败");
+			throw new RuntimeException(ex);
 		}
 		dataCollectionServcie.start();
 

@@ -8,24 +8,28 @@ import javax.swing.tree.DefaultTreeModel;
 
 import cn.fuego.dms.dao.BaseSiteDao;
 import cn.fuego.dms.dao.DaoContext;
+import cn.fuego.dms.dao.IndicatorGroupDao;
 import cn.fuego.dms.dao.IndicatorInfoDao;
 import cn.fuego.dms.domain.po.BaseSite;
+import cn.fuego.dms.domain.po.IndicatorGroup;
 import cn.fuego.dms.domain.po.IndicatorInfo;
 import cn.fuego.dms.service.SystemBasicService;
+import cn.fuego.dms.ui.model.BaseSiteTreeItem;
 import cn.fuego.dms.ui.model.MonitorValueGroup;
 
 public class SystemBasicServiceImpl implements SystemBasicService
 {
 	IndicatorInfoDao indicatorDao = DaoContext.getInstance().getIndicatorInfoDao();
 	BaseSiteDao baseSiteDao = DaoContext.getInstance().getBaseSiteDao();
-
+	IndicatorGroupDao indicatorGroupDao= DaoContext.getInstance().getIndicatorGroupDao();
+	
 	public DefaultTreeModel LoadBaseSiteTree()
 	{
 		baseSiteDao.getAll();
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("基站列表");
 		for (BaseSite b : baseSiteDao.getAll())
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(String.valueOf(b.getResourceID()));
+			DefaultMutableTreeNode node = new BaseSiteTreeItem(b);
 			root.add(node);
 		}
 		DefaultTreeModel treeModel = new DefaultTreeModel(root);
@@ -52,5 +56,12 @@ public class SystemBasicServiceImpl implements SystemBasicService
 		}
 
 		return list;
+	}
+
+	@Override
+	public List<IndicatorGroup> loadMonitorGroupList()
+	{
+		
+		return indicatorGroupDao.getAll();
 	}
 }

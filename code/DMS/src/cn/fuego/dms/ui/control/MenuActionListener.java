@@ -35,7 +35,9 @@ public class MenuActionListener implements  ActionListener
 			
 		}else if(item.getActionCommand().equals("关于DMS...")){
 			AboutUsDialog dlg=new AboutUsDialog();
-			dlg.show();
+			dlg.setVisible(true);
+		}else if(item.getActionCommand().equals("连接服务器")){
+			frame.startController();
 		}else {
 			;
 		}
