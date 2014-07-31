@@ -9,6 +9,7 @@
 package cn.fuego.dms.service.collector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimerTask;
@@ -16,14 +17,16 @@ import java.util.TimerTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.fuego.dms.communicate.Communicator;
 import cn.fuego.dms.communicate.CommunicatorFactory;
-import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
 import cn.fuego.dms.domain.po.DataFormat;
 import cn.fuego.dms.service.cache.DataFormatCache;
 import cn.fuego.dms.service.model.Collection;
 import cn.fuego.dms.service.model.Indicator;
 import cn.fuego.dms.service.model.Resource;
+import cn.fuego.dms.util.SystemConfigInfo;
+import cn.fuego.dms.util.algorithm.FormulaParser;
+import cn.fuego.dms.util.format.DataTypeConvert;
+import cn.fuego.dms.util.validate.ValidatorUtil;
 
 /** 
  * @ClassName: CollectTask 
@@ -39,7 +42,6 @@ public class CollectTask extends TimerTask
 	private int cacheLenth = 60;
 	private List<Collection> dataCache = new ArrayList<Collection>();
 
-	
 	/* (non-Javadoc)
 	 * @see java.util.TimerTask#run()
 	 */
@@ -58,6 +60,8 @@ public class CollectTask extends TimerTask
 		}
 		catch(Exception e)
 		{
+			CommunicatorFactory.getInstance().getCommunicator().close();
+			CommunicatorFactory.getInstance().getCommunicator().open(SystemConfigInfo.getServerIP(), SystemConfigInfo.getServerPort(), SystemConfigInfo.getCommPort());
 			log.error("collect data error ",e);
 		}
 		if(null != nextCollection)
@@ -120,46 +124,39 @@ public class CollectTask extends TimerTask
 	
 	private Resource parseData(String dataMessage)
 	{
-		log.info(dataMessage);
- 
+		log.info("parse data is :" +dataMessage);
+		log.info("parse data is :" +DataTypeConvert.toHexStringList(dataMessage));
+
 		//first two byte is resource id (base station id)
 		String resID = ApplicationProtocol.getResID(dataMessage);
 		Resource resource = new Resource();
 		resource.setResID(resID);
 		
 		//convert indicator value;
-		byte[] dataBytes = dataMessage.getBytes();
-		if(dataBytes.length == (DataFormatCache.getInstance().getAllDataLength()+ApplicationProtocol.RES_ID_LENGTH))
+		List<Integer> dataBytes = DataTypeConvert.toIntList(dataMessage);
+		if(dataBytes.size() == (DataFormatCache.getInstance().getAllDataLength()+ApplicationProtocol.RES_ID_LENGTH))
 		{
 		
 			List<DataFormat> forMatList = DataFormatCache.getInstance().getAll();
 			
-			int dataIndex = ApplicationProtocol.RES_ID_LENGTH;
-			for(DataFormat format : forMatList)
+ 			for(DataFormat format : forMatList)
 			{	
 				Indicator indicator = new Indicator();
 				indicator.setIndicatorID(format.getIndicatorID());
-				
-				int value =0;
-
-				int byteValue = 1;
-				
-				for(int i=format.getDataLength();i>0;i--)
-				{
-					value += dataBytes[dataIndex+i-1]*byteValue;
-					byteValue *= 256; 
-				}
-				dataIndex += format.getDataLength();
-				indicator.setValue(String.valueOf(value));
+				indicator.setValue(DataParser.calcWithFormula(format,dataBytes));
 				resource.getIndicatorList().add(indicator);
 			}
 		}
 		else
 		{
-			log.error("the data length is wrong. data is :"+dataMessage);
+			log.error("the data length is wrong. data length :"+dataMessage.length());
+			log.error("the data length is wrong. data bytes is :"+DataTypeConvert.toHexStringList(dataMessage));
+			log.error("the data length is wrong. data string is :"+dataMessage);
 		}
  
 		return resource;
 	}
+	
+	
 
 }

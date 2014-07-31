@@ -4,7 +4,6 @@
  */
 package cn.fuego.dms.util.file.property;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -19,9 +18,7 @@ public class PropertyReader
 {
 
     private static final Log log = LogFactory.getLog(PropertyReader.class);
-
-    
-
+ 
     private static final String CONFIG_PATH = "Config.properties";
     private static PropertyReader instance;
     private Properties prop;

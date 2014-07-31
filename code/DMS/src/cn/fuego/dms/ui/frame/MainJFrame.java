@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,12 +58,12 @@ import cn.fuego.dms.util.SystemConfigInfo;
 public class MainJFrame extends JFrame
 {
 	// Log
-	static Log log = LogFactory.getLog(MainJFrame.class);
+	private static Log log = LogFactory.getLog(MainJFrame.class);
 	// Service
-	SystemBasicService contextService = ServiceContext.getInstance().getSystemBasicService();
-	DataCollectorService collectorService = ServiceContext.getInstance().getCollectorService();
+	private SystemBasicService contextService = ServiceContext.getInstance().getSystemBasicService();
+	private DataCollectorService collectorService = ServiceContext.getInstance().getCollectorService();
 	// Para
-	private String selectedBaseSite; // Selected basesite
+	private BaseSiteTreeItem selectedBaseSite; // Selected basesite
 	private Map<Integer, IndicatorViewComponent> monitorMap = new HashMap<Integer, IndicatorViewComponent>(); // monitorMap to find the compoment
 
 	// Constant
@@ -76,7 +77,7 @@ public class MainJFrame extends JFrame
 	private BaseSiteTree baseSiteTree;
 	private UIController uic;
 
-	LoadWindow loadWindow;
+	private LoadWindow loadWindow;
 
 	/**
 	 * Create the frame.
@@ -113,6 +114,7 @@ public class MainJFrame extends JFrame
 		loadWindow.nextStep();
 
 		// start Controller
+		this.updateData();
 		startController();
 		loadWindow.nextStep();
 
@@ -123,7 +125,6 @@ public class MainJFrame extends JFrame
 		uic = new UIController(this);
 		try
 		{
-			collectorService.start();
 			uic.start();
 			updateSignal(collectorService.getSignalInfo(), collectorService.getServerName());
 		}
@@ -142,13 +143,9 @@ public class MainJFrame extends JFrame
 		{
 			lblSignal.setText(UIConstant.NO_SIGNAL);
 		}
-		else if (i > 0 && i < 11)
+		else if (i > 0 && i < 8)
 		{
 			lblSignal.setText(UIConstant.LOW_SIGNAL);
-		}
-		else if (i > 10 && i < 21)
-		{
-			lblSignal.setText(UIConstant.MID_SIGNAL);
 		}
 		else if (i > 10 && i < 21)
 		{
@@ -258,18 +255,19 @@ public class MainJFrame extends JFrame
 				try
 				{
 					BaseSiteTreeItem note = (BaseSiteTreeItem) a.getLastSelectedPathComponent();
-					selectedBaseSite = note.getId();
+					selectedBaseSite = note;
+				 
 					updateData();
 				}
 				catch (RuntimeException ex)
 				{
-					log.error("error",ex);
+					log.error("error", ex);
 				}
 			}
 		});
-
 		
 		panel.add(baseSiteTree);
+ 
 	}
 
 	/*
@@ -287,7 +285,7 @@ public class MainJFrame extends JFrame
 		JMenuItem mntmRefresh = new JMenuItem("刷新");
 		mntmRefresh.addActionListener(mls);
 
-		mntmRefresh.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/refresh.png")));
+		mntmRefresh.setIcon(new ImageIcon(UIConstant.REFRESH_PATH));
 		mnNewMenu.add(mntmRefresh);
 
 		JMenuItem mntmAbout = new JMenuItem("关于DMS...");
@@ -297,7 +295,7 @@ public class MainJFrame extends JFrame
 		mnNewMenu.add(mntmConnect);
 		mntmConnect.addActionListener(mls);
 
-		mntmAbout.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/aboutus.png")));
+		mntmAbout.setIcon(new ImageIcon(UIConstant.ABOUTUS_PATH));
 		mnNewMenu.add(mntmAbout);
 
 		JSeparator separator = new JSeparator();
@@ -305,7 +303,7 @@ public class MainJFrame extends JFrame
 
 		JMenuItem mntmExit = new JMenuItem("退出");
 		mntmExit.addActionListener(mls);
-		mntmExit.setIcon(new ImageIcon(MainJFrame.class.getResource("/resource/exit.png")));
+		mntmExit.setIcon(new ImageIcon(UIConstant.EXIT_PATH));
 		mnNewMenu.add(mntmExit);
 	}
 
@@ -325,7 +323,7 @@ public class MainJFrame extends JFrame
 	 */
 	private void initIcon()
 	{
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainJFrame.class.getResource("/resource/icon.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(UIConstant.ICON_PATH));
 	}
 
 	private void initFont()
@@ -381,13 +379,13 @@ public class MainJFrame extends JFrame
 		Collection collection = collectorService.getCurCollection();
 		if (null != collection)
 		{
-			for(Integer indiID : monitorMap.keySet())
+			for (Integer indiID : monitorMap.keySet())
 			{
 				monitorMap.get(indiID).getMonitorValue().setText("");
 			}
-			
-			resource = collection.getResourceByResID(this.selectedBaseSite);
-			
+
+			resource = collection.getResourceByResID(this.selectedBaseSite.getId());
+
 			if (resource != null && resource.getIndicatorList() != null)
 			{
 				for (Indicator i : resource.getIndicatorList())
@@ -397,19 +395,25 @@ public class MainJFrame extends JFrame
 					{
 						mv.getMonitorValue().setText(i.getValue());
 					}
+					
+					
 				}
 			}
 			else
 			{
 				log.warn("can not get the data of the resource. the resource id is :" + this.selectedBaseSite);
 			}
+
 		}
 		else
 		{
 			log.warn("the latest collection is empty");
 		}
-		
+		IndicatorViewComponent mvSiteName = monitorMap.get(1); 
+		mvSiteName.getMonitorValue().setText((String)this.selectedBaseSite.getUserObject());
+		IndicatorViewComponent mvSiteID = monitorMap.get(2);
+		mvSiteID.getMonitorValue().setText(this.selectedBaseSite.getId());
 
 	}
- 
+
 }

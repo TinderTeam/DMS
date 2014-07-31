@@ -1,19 +1,19 @@
 /**   
-* @Title: CommunicateException.java 
-* @Package cn.fuego.bse.communicate.exception 
-* @Description: TODO
-* @author Tang Jun   
-* @date 2014-6-25 下午03:28:26 
-* @version V1.0   
-*/ 
+ * @Title: CommunicateException.java 
+ * @Package cn.fuego.bse.communicate.exception 
+ * @Description: TODO
+ * @author Tang Jun   
+ * @date 2014-6-25 下午03:28:26 
+ * @version V1.0   
+ */
 package cn.fuego.dms.communicate.exception;
 
-/** 
- * @ClassName: CommunicateException 
+/**
+ * @ClassName: CommunicateException
  * @Description: TODO
  * @author Tang Jun
- * @date 2014-6-25 下午03:28:26 
- *  
+ * @date 2014-6-25 下午03:28:26
+ * 
  */
 
 public class CommunicateException extends RuntimeException
@@ -24,18 +24,16 @@ public class CommunicateException extends RuntimeException
 	public static final String SEND_DATA_FAILED = "send data to port failed";
 	public static final String READ_DATA_FAILED = "read data to port failed";
 
-	
+	public static final String READ_DATA_TIME_OUT = "read data time out";
+
 	public static final String PORT_IN_USED = "the port is used";
-	
-	public static final String GRPR_CAN_NOT_WORK ="the gprs can not work";
-	
-	public static final String GRPR_CMD_FAIL ="the gprs command failed";
 
-	public static final String GRPR_SEND_DATA_FAIL ="the gprs send failed";
-	public static final String GRPR_READ_DATA_FAIL ="the gprs read failed";
+	public static final String GRPR_CAN_NOT_WORK = "the gprs can not work";
 
+	public static final String GRPR_CMD_FAIL = "the gprs command failed";
 
-
+	public static final String GRPR_SEND_DATA_FAIL = "the gprs send failed";
+	public static final String GRPR_READ_DATA_FAIL = "the gprs read failed";
 
 	/**
 	 * 
@@ -73,5 +71,5 @@ public class CommunicateException extends RuntimeException
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
-	 
+
 }

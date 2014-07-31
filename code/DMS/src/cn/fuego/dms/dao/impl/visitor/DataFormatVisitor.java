@@ -21,17 +21,21 @@ public class DataFormatVisitor extends VisitorSupport
 
 	public void visit(Attribute attr)
 	{
-		if (attr.getName().equals("seq"))
-		{
-			list.get(list.size() - 1).setSeq(Integer.valueOf(attr.getValue()));
-		}
-		else if (attr.getName().equals("indicatorID"))
+		if (attr.getName().equals("indicatorID"))
 		{
 			list.get(list.size() - 1).setIndicatorID(Integer.valueOf(attr.getValue()));
 		}
 		else if (attr.getName().equals("dataLength"))
 		{
 			list.get(list.size() - 1).setDataLength(Integer.valueOf(attr.getValue()));
+		}
+		else if (attr.getName().equals("formula"))
+		{
+			list.get(list.size() - 1).setFormula(attr.getValue());
+		}
+		else if (attr.getName().equals("dataType"))
+		{
+			list.get(list.size() - 1).setDataType(attr.getValue());
 		}
 
 	}

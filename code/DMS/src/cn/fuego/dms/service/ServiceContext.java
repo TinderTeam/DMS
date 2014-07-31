@@ -31,6 +31,7 @@ public class ServiceContext
 		}
 		return colletor;
 	}
+
 	public synchronized SystemBasicService getSystemBasicService()
 	{
 		if (null == systemBasicService)

@@ -1,122 +1,125 @@
 /**   
-* @Title: CollectProtocol.java 
-* @Package cn.fuego.bse.service.collector 
-* @Description: TODO
-* @author Tang Jun   
-* @date 2014-6-25 下午11:17:27 
-* @version V1.0   
-*/ 
+ * @Title: CollectProtocol.java 
+ * @Package cn.fuego.bse.service.collector 
+ * @Description: TODO
+ * @author Tang Jun   
+ * @date 2014-6-25 下午11:17:27 
+ * @version V1.0   
+ */
 package cn.fuego.dms.service.collector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import cn.fuego.dms.domain.po.DataFormat;
 import cn.fuego.dms.service.cache.DataFormatCache;
+import cn.fuego.dms.util.algorithm.FormulaParser;
+import cn.fuego.dms.util.validate.ValidatorUtil;
 
-/** 
- * @ClassName: CollectProtocol 
+/**
+ * @ClassName: CollectProtocol
  * @Description: TODO
  * @author Tang Jun
- * @date 2014-6-25 下午11:17:27 
- *  
+ * @date 2014-6-25 下午11:17:27
+ * 
  */
 
 public class ApplicationProtocol
 {
 	private static Log log = LogFactory.getLog(ApplicationProtocol.class);
 
-	public static final String PACKET_HEAD = "whut";
-	public static final String PACKET_END = "fuego";
-	
+	public static final String PACKET_HEAD = "fu";
+	public static final String PACKET_END = "go";
+
 	public static final String CMD_QUIT = "q";
 	public static final String CMD_WRITE_DATA = "w";
 	public static final String CMD_READ_DATA = "r";
- 
-	
+
 	public static final int CMD_LENGTH = 1;
 
 	public static final int RES_ID_LENGTH = 2;
 
+
 	public static boolean isValid(String data)
 	{
-		if(!data.startsWith(PACKET_HEAD))
+		if (!data.startsWith(PACKET_HEAD))
 		{
 			return false;
 		}
-		if(!data.endsWith(PACKET_END))
+		if (!data.endsWith(PACKET_END))
 		{
 			return false;
 		}
 		return true;
 	}
-	
+
 	public static String decode(String data)
 	{
 		String message = null;
-		if(!isValid(data))
+		if (!isValid(data))
 		{
 			return message;
 		}
-		message = data.substring(PACKET_HEAD.length(),data.length()-PACKET_END.length());
+		message = data.substring(PACKET_HEAD.length(), data.length() - PACKET_END.length());
 		return message;
 	}
-	
+
 	public static String getCommand(String message)
 	{
-		return message.substring(0,CMD_LENGTH);
+		return message.substring(0, CMD_LENGTH);
 	}
+
 	public static String getDataMessage(String message)
 	{
-		return message.substring(CMD_LENGTH,message.length());
+		return message.substring(CMD_LENGTH, message.length());
 	}
-	
+
 	public static List<String> getDataMessageList(String message)
 	{
 		String dataMessage = getDataMessage(message);
 		int dataLength = DataFormatCache.getInstance().getAllDataLength() + ApplicationProtocol.RES_ID_LENGTH;
 		List<String> messageList = new ArrayList<String>();
-		for(int i=dataLength;i<=dataMessage.length();i=i+dataLength)
+		for (int i = dataLength; i <= dataMessage.length(); i = i + dataLength)
 		{
-			String data = dataMessage.substring(i-dataLength,i);
+			String data = dataMessage.substring(i - dataLength, i);
 			messageList.add(data);
 		}
 		log.info("the data message list size is " + messageList.size());
 		return messageList;
 	}
-	
+
 	public static String getResID(String data)
 	{
 		String resID = "";
 		int resNum = 0;
 		byte[] dataBytes = data.getBytes();
-		
-		if(dataBytes.length >= RES_ID_LENGTH)
+
+		if (dataBytes.length >= RES_ID_LENGTH)
 		{
 			int byteValue = 1;
-			for(int i=RES_ID_LENGTH;i>0;i--)
+			for (int i = RES_ID_LENGTH; i > 0; i--)
 			{
-				resNum += dataBytes[i-1]*byteValue;
-				byteValue *= 256; 
+				resNum += dataBytes[i - 1] * byteValue;
+				byteValue *= 256;
 			}
 		}
 		else
-		{	
+		{
 			log.warn("the data length is not right.data is " + data);
 		}
-
-		
 
 		resID = String.valueOf(resNum);
 		return resID;
 	}
-	
+
 	public static String encode(String encode)
 	{
-		return PACKET_HEAD+encode+PACKET_END;
+		return PACKET_HEAD + encode + PACKET_END;
 	}
-	
 
 }

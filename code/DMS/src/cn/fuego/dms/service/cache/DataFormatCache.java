@@ -41,18 +41,7 @@ public class DataFormatCache
 	{
 		return this.cache;
 	}
-	public DataFormat getDataFormatBySeq(int seq)
-	{
-		for(DataFormat format : cache)
-		{
-			if(seq == format.getSeq())
-			{
-				return format;
-			}
-		}
-		log.warn("can not find the format of the seq." + seq);
-		return null;
-	}
+ 
 	
 	public int getAllDataLength()
 	{

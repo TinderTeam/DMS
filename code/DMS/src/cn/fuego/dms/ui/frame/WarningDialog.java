@@ -20,19 +20,18 @@ public class WarningDialog extends JDialog
 
 	private final JPanel contentPanel = new JPanel();
 
-
 	/**
 	 * Create the dialog.
 	 */
 	public WarningDialog(String msg)
 	{
 		setTitle("警告");
-		this.setSize(450,300);
-		this.setLocation((int)( UIConstant.SCR_WIDTH -450)/2, (int)(UIConstant.SCR_HEIGHT-300)/2);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WarningDialog.class.getResource("/resource/icon.png")));
+		this.setSize(450, 300);
+		this.setLocation((int) (UIConstant.SCR_WIDTH - 450) / 2, (int) (UIConstant.SCR_HEIGHT - 300) / 2);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(UIConstant.ICON_PATH));
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		
+
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -48,8 +47,10 @@ public class WarningDialog extends JDialog
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("关闭");
-				okButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
+				okButton.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
 						close();
 					}
 				});
@@ -58,10 +59,11 @@ public class WarningDialog extends JDialog
 				getRootPane().setDefaultButton(okButton);
 			}
 		}
-		
-		
+
 	}
-	public void close(){
+
+	public void close()
+	{
 		this.dispose();
 	}
 

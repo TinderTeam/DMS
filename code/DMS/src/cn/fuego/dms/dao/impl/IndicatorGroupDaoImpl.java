@@ -9,7 +9,6 @@ import cn.fuego.dms.dao.IndicatorGroupDao;
 import cn.fuego.dms.dao.constant.XMLPathConstant;
 import cn.fuego.dms.dao.impl.visitor.IndicatorGroupVisitor;
 import cn.fuego.dms.domain.po.IndicatorGroup;
-import cn.fuego.dms.ui.control.UIController;
 import cn.fuego.dms.util.file.dom4j.XMLReader;
 
 public class IndicatorGroupDaoImpl implements IndicatorGroupDao
@@ -25,8 +24,7 @@ public class IndicatorGroupDaoImpl implements IndicatorGroupDao
 			return v.getList();
 		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("read indicator error",e);
 		}
 		return null;
 		

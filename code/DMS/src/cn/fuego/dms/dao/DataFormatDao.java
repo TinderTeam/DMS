@@ -7,5 +7,5 @@ import cn.fuego.dms.domain.po.DataFormat;
 public interface DataFormatDao
 {
 	List<DataFormat> getAll();
-	
+
 }

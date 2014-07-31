@@ -4,6 +4,7 @@ public class BaseSite
 {
 	private String baseSiteName;
 	private String resourceID;
+
 	/**
 	 * @return the baseSiteName
 	 */
@@ -11,13 +12,16 @@ public class BaseSite
 	{
 		return baseSiteName;
 	}
+
 	/**
-	 * @param baseSiteName the baseSiteName to set
+	 * @param baseSiteName
+	 *            the baseSiteName to set
 	 */
 	public void setBaseSiteName(String baseSiteName)
 	{
 		this.baseSiteName = baseSiteName;
 	}
+
 	/**
 	 * @return the resourceID
 	 */
@@ -25,20 +29,24 @@ public class BaseSite
 	{
 		return resourceID;
 	}
+
 	/**
-	 * @param resourceID the resourceID to set
+	 * @param resourceID
+	 *            the resourceID to set
 	 */
 	public void setResourceID(String resourceID)
 	{
 		this.resourceID = resourceID;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "BaseSite [baseSiteName=" + baseSiteName + ", resourceID="
-				+ resourceID + "]";
+		return "BaseSite [baseSiteName=" + baseSiteName + ", resourceID=" + resourceID + "]";
 	}
 }

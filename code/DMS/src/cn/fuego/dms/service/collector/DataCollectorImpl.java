@@ -20,8 +20,6 @@ import cn.fuego.dms.communicate.exception.CommunicateException;
 import cn.fuego.dms.service.DataCollectorService;
 import cn.fuego.dms.service.model.Collection;
 import cn.fuego.dms.util.SystemConfigInfo;
-import cn.fuego.dms.util.file.property.PropertyItemNameConst;
-import cn.fuego.dms.util.file.property.PropertyReader;
 
 /** 
  * @ClassName: DataCollector 
@@ -36,15 +34,34 @@ public class DataCollectorImpl implements DataCollectorService
 	private Log log = LogFactory.getLog(DataCollectorImpl.class);
 
 	/* data collector period*/
-	private int period = 30; //unit is second
+	private static final int DEFUALT_PERIOD = 15;
+	private int period = DEFUALT_PERIOD; //unit is second
 	
-	private Timer timer; 
+	private Timer timer;
 	
 	private static final int MILLIS_NUM_OF_SEC = 1000;
 	
 	private CollectTask collectorTask = new CollectTask();
 	private Communicator comunicator = CommunicatorFactory.getInstance().getCommunicator();
-
+ 
+	public  DataCollectorImpl()
+	{
+		
+		try
+		{
+			String strValue = SystemConfigInfo.getCollPeriod();
+			this.period = Integer.valueOf(strValue);
+		}
+		catch(Exception e)
+		{
+			log.error("the config collect period is wrong.");
+		}
+		if(this.period < DEFUALT_PERIOD)
+		{
+			this.period = DEFUALT_PERIOD;
+		}
+		log.info("the collect period is :" + this.period); 
+	}
 	public void modifyPeriod(int period)
 	{
 		this.period = period;
@@ -58,7 +75,7 @@ public class DataCollectorImpl implements DataCollectorService
 		try
 		{
 			comunicator.open(SystemConfigInfo.getServerIP(), SystemConfigInfo.getServerPort(), SystemConfigInfo.getCommPort());
-			timer = new Timer();
+			
 			initTimer();
 			
 		}
@@ -74,10 +91,14 @@ public class DataCollectorImpl implements DataCollectorService
 	
 	private void initTimer()
 	{
-        Calendar date = Calendar.getInstance();
-		
-		long delayTime = this.period - date.get(Calendar.SECOND)%this.period;
-		timer.schedule(collectorTask,delayTime*MILLIS_NUM_OF_SEC,this.period*MILLIS_NUM_OF_SEC);
+		if(null == timer)
+		{
+			timer = new Timer();
+	        Calendar date = Calendar.getInstance();
+	 
+			long delayTime = this.period - date.get(Calendar.SECOND)%this.period;
+			timer.schedule(collectorTask,delayTime*MILLIS_NUM_OF_SEC,this.period*MILLIS_NUM_OF_SEC);
+		}
 	}
 	
 	public Collection getCurCollection()
@@ -91,6 +112,7 @@ public class DataCollectorImpl implements DataCollectorService
 		if(null != timer)
 		{
 			timer.cancel();
+			timer = null;
 		}
 		this.comunicator.close();
 	}

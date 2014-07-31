@@ -1,11 +1,11 @@
 /**   
-* @Title: GPRSCommunicator.java 
-* @Package cn.fuego.dms.communicate 
-* @Description: TODO
-* @author Tang Jun   
-* @date 2014-7-7 上午11:07:57 
-* @version V1.0   
-*/ 
+ * @Title: GPRSCommunicator.java 
+ * @Package cn.fuego.dms.communicate 
+ * @Description: TODO
+ * @author Tang Jun   
+ * @date 2014-7-7 上午11:07:57 
+ * @version V1.0   
+ */
 package cn.fuego.dms.communicate;
 
 import org.apache.commons.logging.Log;
@@ -15,12 +15,12 @@ import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
 import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
 import cn.fuego.dms.service.collector.DataCollectorImpl;
 
-/** 
- * @ClassName: GPRSCommunicator 
+/**
+ * @ClassName: GPRSCommunicator
  * @Description: TODO
  * @author Tang Jun
- * @date 2014-7-7 上午11:07:57 
- *  
+ * @date 2014-7-7 上午11:07:57
+ * 
  */
 
 public class GPRSCommunicatorimpl implements Communicator
@@ -30,14 +30,15 @@ public class GPRSCommunicatorimpl implements Communicator
 
 	private Log log = LogFactory.getLog(DataCollectorImpl.class);
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#open(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void open(String serverIP, String serverPort, String commPort)
 	{
-		if(!isOpen)
+		if (!isOpen)
 		{
 			gprs.initGPRS(serverIP, serverPort, commPort);
 			this.isOpen = true;
@@ -48,17 +49,21 @@ public class GPRSCommunicatorimpl implements Communicator
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#sendData(java.lang.String)
 	 */
 	@Override
 	public void sendData(String data)
 	{
 		gprs.sendData(data);
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#readData(int)
 	 */
 	@Override
@@ -68,7 +73,9 @@ public class GPRSCommunicatorimpl implements Communicator
 		return gprs.readData(length);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#readData(java.lang.String)
 	 */
 	@Override
@@ -78,7 +85,9 @@ public class GPRSCommunicatorimpl implements Communicator
 		return gprs.readData(end);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#close()
 	 */
 	@Override
@@ -86,10 +95,13 @@ public class GPRSCommunicatorimpl implements Communicator
 	{
 		this.isOpen = false;
 		gprs.closeGPRS();
-		
+		log.info("close the communicator");
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#getSignalInfo()
 	 */
 	@Override
@@ -99,7 +111,9 @@ public class GPRSCommunicatorimpl implements Communicator
 		return gprs.getSignalInfo();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.fuego.dms.communicate.Communicator#getServerName()
 	 */
 	@Override

@@ -17,17 +17,19 @@ public class UIController extends Thread
 	int REFRASH_RATE = 10000;
 	private MainJFrame frame;
 
-	public UIController(MainJFrame mainFrame) 
+	public UIController(MainJFrame mainFrame)
 	{
 		super();
- 		frame = mainFrame;
+		frame = mainFrame;
 
 	}
 
 	public void start()
 	{
+		dataCollectionServcie.start();
 
 		log.info("start");
+ 
 		super.start();
 
 	}
@@ -37,8 +39,8 @@ public class UIController extends Thread
 	{
 		while (true)
 		{
-			log.info("refresh the data.the time is "+Calendar.getInstance().getTime().toLocaleString());
-		 
+			log.info("refresh the data.the time is " + Calendar.getInstance().getTime().toLocaleString());
+
 			try
 			{
 				frame.updateData();
@@ -46,23 +48,22 @@ public class UIController extends Thread
 			}
 			catch (InterruptedException e)
 			{
-				log.error("the sleep interrupt.",e);
+				log.error("the sleep interrupt.", e);
 
 			}
 		}
 
 	}
-	
-	 
+
 	public void stopThread()
 	{
 		try
 		{
 			dataCollectionServcie.stop();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			log.error("stop colletor failed",e);
+			log.error("stop colletor failed", e);
 		}
 		this.stop();
 	}

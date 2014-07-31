@@ -16,7 +16,6 @@ public class AboutUsDialog extends JDialog
 
 	private final JPanel contentPanel = new JPanel();
 
-
 	/**
 	 * Create the dialog.
 	 */
@@ -30,13 +29,13 @@ public class AboutUsDialog extends JDialog
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			
+
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("关闭");
-				DailogActionListener lsn=new DailogActionListener(this);
+				DailogActionListener lsn = new DailogActionListener(this);
 				cancelButton.addActionListener(lsn);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);

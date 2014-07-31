@@ -3,9 +3,9 @@
 	<BaseSite id="12593">东莞基站</BaseSite>
 	<BaseSite id="12366">武汉基站</BaseSite>
 	<BaseSite id="12336">广州基站</BaseSite>
-	<BaseSite id="00000004">北京基站</BaseSite>
-	<BaseSite id="00000005">上海基站</BaseSite>
-	<BaseSite id="00000006">深圳基站</BaseSite>
+	<BaseSite id="1">北京基站</BaseSite>
+	<BaseSite id="49">上海基站</BaseSite>
+	<BaseSite id="24930">深圳基站</BaseSite>
 	<BaseSite id="00000007">河源基站</BaseSite>
 	<BaseSite id="00000008">惠州基站</BaseSite>
 	

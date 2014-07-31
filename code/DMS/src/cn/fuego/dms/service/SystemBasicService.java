@@ -10,11 +10,10 @@ import cn.fuego.dms.ui.model.MonitorValue;
 public interface SystemBasicService
 {
 
-	DefaultTreeModel  LoadBaseSiteTree();
+	DefaultTreeModel LoadBaseSiteTree();
 
 	List<MonitorValue> loadMonitorList(int basicInfoId);
 
 	List<IndicatorGroup> loadMonitorGroupList();
 
-	
 }

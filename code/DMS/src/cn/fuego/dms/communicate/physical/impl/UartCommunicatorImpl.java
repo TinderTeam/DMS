@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 
 import cn.fuego.dms.communicate.exception.CommunicateException;
 import cn.fuego.dms.communicate.physical.PhysicalChannel;
+import cn.fuego.dms.util.format.DataTypeConvert;
 
 /**
  * @ClassName: UartCommunicatorImpl
@@ -77,7 +78,7 @@ public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventLi
 			log.error("set uart parameter. baudRate is " + baudRate, e);
 			throw new CommunicateException(CommunicateException.PORT_OPERATE_FAILED, e);
 		}
-		
+		messageBuffer.setLength(0);
 		startRead();
 
 	}
@@ -201,6 +202,9 @@ public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventLi
 			   if(index >= 0)
 			   {
 				   readMessage = messageBuffer.substring(0,index+end.length());
+				   
+
+
 				   messageBuffer.delete(0, readMessage.length());
 				   break;
 			   }
@@ -209,13 +213,14 @@ public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventLi
 			   if ((System.currentTimeMillis() - nowTime) / 1000 > timeout)
 			   {
 				   log.warn("read data time out. time out is " + timeout);
+				   log.info("now the buffer data is :"+DataTypeConvert.toHexStringList(readMessage));
 				   log.warn("now the buffer data is " + readMessage);
-				   break;
+				   throw new CommunicateException(CommunicateException.READ_DATA_TIME_OUT);
 			   }
  		}
 		
- 
-		log.info("the uart read message is :"+readMessage);
+		log.info("uart read the byte is :"+DataTypeConvert.toHexStringList(readMessage));
+		log.info("uart read string by end is :"+readMessage);
 		return readMessage;
 	}
 
@@ -323,7 +328,7 @@ public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventLi
 			try
 			{
 				int ch;
-				while((ch=inputStream.read()) > 0) 
+				while((ch=inputStream.read()) >=0) 
 				{   
 					messageBuffer.append((char)ch);
 					//log.info("reading from port," + messageBuffer.toString());	
@@ -335,6 +340,16 @@ public class UartCommunicatorImpl  implements PhysicalChannel, SerialPortEventLi
 			}
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see cn.fuego.dms.communicate.physical.PhysicalChannel#clearBuffer()
+	 */
+	@Override
+	public void clearBuffer()
+	{
+		this.messageBuffer.setLength(0);
+		
 	}
  
 }

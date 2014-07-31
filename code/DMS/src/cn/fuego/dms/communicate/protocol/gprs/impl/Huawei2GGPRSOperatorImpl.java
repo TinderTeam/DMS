@@ -54,7 +54,7 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		log.info("the cmd is :" + cmd);
 		communicator.sendData(addEndFlag(cmd));
 		//read send command echo 
-		String cmdMessage = communicator.readData(GPRSCmdConst.CMD_SEND_END_FLAG);
+		communicator.readData(GPRSCmdConst.CMD_SEND_END_FLAG);
 		
  
 		for(int i=0;i<flagNum;i++)
@@ -120,11 +120,17 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 	public void initGPRS(String serverIP,String serverPort,String communicatorPort)
 	{
 		communicator.init(communicatorPort);
+		
 		try
 		{
-			sendCmd(GPRSCmdConst.CLOSE_PROFILE_CONN,2);
+			communicator.sendData(GPRSCmdConst.CLOSE_IPEN_TRANS);
+			
+			Thread.sleep(15000);
+			communicator.clearBuffer();
+			sendCmd(GPRSCmdConst.RESET,1);
+			communicator.clearBuffer();
 		}
-		catch(CommunicateException e)
+		catch(Exception e)
 		{
 			log.error("close GPRS failed",e);
 		}
@@ -302,9 +308,7 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		}
 		String sendCmd = GPRSCmdConst.SEND_DATA_CMD+message.length();
 		this.communicator.sendData(this.addEndFlag(sendCmd));
-		
-		String result="";
-		
+ 	
 		//read send command
 		this.communicator.readData(GPRSCmdConst.CMD_SEND_END_FLAG);
 		
@@ -319,7 +323,7 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		
 		//read ^SISW: 0,1
 		this.communicator.readData(GPRSCmdConst.END_FLAG);
-		result = this.communicator.readData(GPRSCmdConst.END_FLAG);
+		this.communicator.readData(GPRSCmdConst.END_FLAG);
 
 	}
 
@@ -354,9 +358,10 @@ public class Huawei2GGPRSOperatorImpl implements GPRSOperator
 		{
 			return this.readDataIpenMode(end);
 		}
+		
 		log.error("can not read by end flag, with AT mode");
-		return null;
-	}
+		throw new CommunicateException(CommunicateException.GRPR_CAN_NOT_WORK);
+ 	}
 	
 	public String readDataATMode(int length)
 	{

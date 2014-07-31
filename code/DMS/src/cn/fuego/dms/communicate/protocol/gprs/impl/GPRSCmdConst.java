@@ -18,6 +18,9 @@ package cn.fuego.dms.communicate.protocol.gprs.impl;
 
 public class GPRSCmdConst
 {
+	
+	public static final String RESET = "AT&F"; 
+	
 	public static final String AT = "AT";
 	
 	public static final String CHECK_SINGAL = "AT+CSQ";

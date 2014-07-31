@@ -4,6 +4,7 @@ public class IndicatorGroup
 {
 	private int indicateGroupID;
 	private String indicateGroupName;
+
 	/**
 	 * @return the indicateGroupID
 	 */
@@ -11,13 +12,16 @@ public class IndicatorGroup
 	{
 		return indicateGroupID;
 	}
+
 	/**
-	 * @param indicateGroupID the indicateGroupID to set
+	 * @param indicateGroupID
+	 *            the indicateGroupID to set
 	 */
 	public void setIndicateGroupID(int indicateGroupID)
 	{
 		this.indicateGroupID = indicateGroupID;
 	}
+
 	/**
 	 * @return the indicateGroupName
 	 */
@@ -25,20 +29,24 @@ public class IndicatorGroup
 	{
 		return indicateGroupName;
 	}
+
 	/**
-	 * @param indicateGroupName the indicateGroupName to set
+	 * @param indicateGroupName
+	 *            the indicateGroupName to set
 	 */
 	public void setIndicateGroupName(String indicateGroupName)
 	{
 		this.indicateGroupName = indicateGroupName;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "IndicateGroup [indicateGroupID=" + indicateGroupID
-				+ ", indicateGroupName=" + indicateGroupName + "]";
+		return "IndicateGroup [indicateGroupID=" + indicateGroupID + ", indicateGroupName=" + indicateGroupName + "]";
 	}
 }

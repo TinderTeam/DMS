@@ -23,7 +23,6 @@ public class BaseSiteVisitor extends VisitorSupport
 	public void visit(Attribute attr)
 	{
 		getList().get(getList().size() - 1).setResourceID(attr.getValue());
-		;
 	}
 
 	public List<BaseSite> getList()

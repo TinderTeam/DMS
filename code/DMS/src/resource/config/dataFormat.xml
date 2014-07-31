@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <DataFormatList>
-	<DataFormat seq="1" dataLength="2" indicatorID='3'></DataFormat>
-	<DataFormat seq="2" dataLength='1' indicatorID='4'></DataFormat>
-	<DataFormat seq="3" dataLength='1' indicatorID='5'></DataFormat>
-	<DataFormat seq="4" dataLength='1' indicatorID='6'></DataFormat>
-	<DataFormat seq="5" dataLength='1' indicatorID='7'></DataFormat>
-	<DataFormat seq="6" dataLength='1' indicatorID='8'></DataFormat>
-	<DataFormat seq="7" dataLength='1' indicatorID='9'></DataFormat>
-	<DataFormat seq="8" dataLength='1' indicatorID='10'></DataFormat>
-    <DataFormat seq="9" dataLength='1' indicatorID='11'></DataFormat>
-	
+
+	<DataFormat indicatorID='3'  name="A相电压"    unit="(V)"    dataType="int"             dataLength="2" formula="value{2}*256+value{3}" indicatorGrpID="2"  >A相电压</DataFormat>
+	<DataFormat indicatorID='4'  name="B相电压"    unit="(V)"    dataType="int"             dataLength='2' formula="value{4}*256+value{5}" indicatorGrpID="2"  >B相电压</DataFormat>
+	<DataFormat indicatorID='5'  name="C相电压"    unit="(V)"    dataType="int"             dataLength='2' formula="value{6}*256+value{7}" indicatorGrpID="2"  >C相电压</DataFormat>
+	<DataFormat indicatorID='6'  name="市电频率"   unit="(HZ)"   dataType="int"             dataLength='1' formula="value{8}"              indicatorGrpID="2" >市电频率</DataFormat>
+	<DataFormat indicatorID='7'  name="门禁"       unit=""       dataType="enum:关:门"      dataLength='1' formula="value{12}"             indicatorGrpID="3"  >门禁</DataFormat>	
+	<DataFormat indicatorID='8'  name="烟雾"       unit=""       dataType="enum:正常:异常"  dataLength='1' formula="value{10}"             indicatorGrpID="3"  >烟雾</DataFormat>
+	<DataFormat indicatorID='9'  name="蓄电池电压" unit="(V)"    dataType="float"           dataLength='1' formula="value{9}/10+400/10"    indicatorGrpID="4"  >蓄电池电压</DataFormat>	
+	<DataFormat indicatorID='10' name="温度"       unit="(℃)"   dataType="int"             dataLength='1' formula="value{11}-50"          indicatorGrpID="5"  >温度</DataFormat>
+	<DataFormat indicatorID='11' name="湿度"       unit="(%)"    dataType="int"             dataLength='1' formula="value{13}"             indicatorGrpID="5"  >湿度</DataFormat>	
 </DataFormatList>

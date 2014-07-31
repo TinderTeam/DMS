@@ -5,14 +5,18 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-import cn.fuego.dms.communicate.protocol.gprs.GPRSFactory;
-import cn.fuego.dms.communicate.protocol.gprs.GPRSOperator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import cn.fuego.dms.service.collector.CollectTask;
 import cn.fuego.dms.ui.frame.AboutUsDialog;
 import cn.fuego.dms.ui.frame.MainJFrame;
 
 public class MenuActionListener implements ActionListener
 
 {
+	private Log log = LogFactory.getLog(CollectTask.class);
+
 	static MenuActionListener listner;
 	MainJFrame frame;
 
@@ -25,11 +29,11 @@ public class MenuActionListener implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		JMenuItem item = (JMenuItem) e.getSource();
-		System.out.println(item.getActionCommand());
+		log.info("the command is :" + item.getActionCommand());
 
-		if (item.getActionCommand().equals("退出"))
+ 		if (item.getActionCommand().equals("退出"))
 		{
-			
+
 		}
 		else if (item.getActionCommand().equals("刷新"))
 		{
