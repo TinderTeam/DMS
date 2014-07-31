@@ -33,11 +33,11 @@ public class MenuActionListener implements ActionListener
 
  		if (item.getActionCommand().equals("退出"))
 		{
-
+ 			System.exit(0);
 		}
 		else if (item.getActionCommand().equals("刷新"))
 		{
-
+			frame.updateData();
 		}
 		else if (item.getActionCommand().equals("关于DMS..."))
 		{

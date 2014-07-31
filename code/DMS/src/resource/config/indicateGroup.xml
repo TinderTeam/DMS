@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <IndicateGroupList>
-	<IndicateGroup id="1">基站信息</IndicateGroup>
 	<IndicateGroup id="2">市电状态</IndicateGroup>
 	<IndicateGroup id="3">门禁烟雾状态</IndicateGroup>
 	<IndicateGroup id="4">蓄电池状态</IndicateGroup>

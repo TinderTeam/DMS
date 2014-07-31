@@ -37,8 +37,8 @@ public class LoadWindow extends JWindow
 	public LoadWindow()
 	{
 
-		imgLabel = new JLabel(new ImageIcon(UIConstant.ICON_PATH));
-		imgLabel.setBounds(0, 0, WIDTH, HEIGHT - 15);
+		imgLabel = new JLabel(new ImageIcon(UIConstant.INIT_PATH));
+		imgLabel.setBounds(0, 0, WIDTH, HEIGHT );
 
 		this.add(imgLabel);
 

@@ -30,5 +30,6 @@ public class UIConstant
 	public static final String EXIT_PATH = PICTURE_PATH + "exit.png";
 	public static final String ICON_PATH = PICTURE_PATH + "icon.png";
 	public static final String REFRESH_PATH = PICTURE_PATH + "refresh.png";
+	public static final String INIT_PATH = PICTURE_PATH + "init.png";
 
 }

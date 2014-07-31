@@ -79,10 +79,17 @@ public class DataCollectorImpl implements DataCollectorService
 			initTimer();
 			
 		}
-		catch(CommunicateException e)
+		catch(Exception e)
 		{
 			log.error("start collect failed",e);
-			stop();
+			try
+			{
+				stop();
+			}
+			catch(Exception e1)
+			{
+				log.error("stop failed",e1);
+			}
 			throw e;
 		}
  

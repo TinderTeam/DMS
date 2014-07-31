@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <IndicateList>
-	<Indicate id="1" groupid="1" unit="">基站名称</Indicate>
-	<Indicate id="2" groupid="1"  unit="">设备ID</Indicate>
+
 	<Indicate id="3" groupid="2" unit="(V)">A相电压</Indicate>
 	<Indicate id="4" groupid="2" unit="(V)">B相电压</Indicate>
 	<Indicate id="5" groupid="2" unit="(V)">C相电压</Indicate>

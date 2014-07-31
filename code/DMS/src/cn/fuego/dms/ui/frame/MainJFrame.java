@@ -9,6 +9,8 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,11 @@ public class MainJFrame extends JFrame
 	private BaseSiteTree baseSiteTree;
 	private UIController uic;
 
+	private JLabel lblSiteNameValue;
+	private JLabel lblSiteIDValue;
+	private JLabel lblTimeValue;
+	
+	
 	private LoadWindow loadWindow;
 
 	/**
@@ -114,10 +121,20 @@ public class MainJFrame extends JFrame
 		loadWindow.nextStep();
 
 		// start Controller
-		this.updateData();
+
+		initDefaltSelect();
+		
+		
 		startController();
 		loadWindow.nextStep();
 
+	}
+
+	private void initDefaltSelect()
+	{
+		BaseSiteTreeItem note = (BaseSiteTreeItem) baseSiteTree.getLastSelectedPathComponent();
+		selectedBaseSite = note;
+		updateData();
 	}
 
 	public void startController()
@@ -185,6 +202,7 @@ public class MainJFrame extends JFrame
 	private void initSouthPanel()
 	{
 		JPanel panel_12 = new JPanel();
+		
 		contentPane.add(panel_12, BorderLayout.SOUTH);
 		panel_12.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
@@ -215,6 +233,43 @@ public class MainJFrame extends JFrame
 
 		List<IndicatorGroup> groupList = contextService.loadMonitorGroupList();
 
+		JPanel siteInfoBox = new JPanel();
+		siteInfoBox.setBackground(Color.WHITE);
+		siteInfoBox.setBorder(new EmptyBorder(10, 10, 10, 0));
+		panel_1.add(siteInfoBox);
+		siteInfoBox.setLayout(new BorderLayout(0, 0));
+		JPanel siteInfoPanel = new JPanel();
+		siteInfoPanel.setBackground(Color.WHITE);
+		siteInfoPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "基本信息", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		siteInfoBox.add(siteInfoPanel);
+		siteInfoPanel.setLayout(new GridLayout(0, 4, 0, 0));
+		
+		
+		// Create LBL
+		JLabel lblName = new JLabel("基站名称");
+		lblName.setHorizontalAlignment(JLabel.CENTER);
+		lblSiteNameValue = new JLabel();
+		lblName.setHorizontalAlignment(JLabel.CENTER);
+		siteInfoPanel.add(		lblName);
+		siteInfoPanel.add(this.lblSiteNameValue);
+	
+		// Create LBL
+		JLabel lblID = new JLabel("基站ID");
+		lblID.setHorizontalAlignment(JLabel.CENTER);
+		lblSiteIDValue = new JLabel();
+		lblID.setHorizontalAlignment(JLabel.CENTER);
+		siteInfoPanel.add(		lblID);
+		siteInfoPanel.add(this.lblSiteIDValue);
+		
+		// Create LBL
+		JLabel lblime = new JLabel("上次采样时间");
+		lblime.setHorizontalAlignment(JLabel.CENTER);
+		lblTimeValue = new JLabel();
+		lblime.setHorizontalAlignment(JLabel.CENTER);
+		siteInfoPanel.add(		lblime);
+		siteInfoPanel.add(this.lblTimeValue);
+		
+		
 		for (IndicatorGroup ig : groupList)
 		{
 			JPanel panel_box = new JPanel();
@@ -267,7 +322,9 @@ public class MainJFrame extends JFrame
 		});
 		
 		panel.add(baseSiteTree);
- 
+		
+
+
 	}
 
 	/*
@@ -374,15 +431,17 @@ public class MainJFrame extends JFrame
 	}
 
 	public void updateData()
-	{
+	{	
+		
+		for (Integer indiID : monitorMap.keySet())
+			{
+				monitorMap.get(indiID).getMonitorValue().setText("");
+			}
+
 		Resource resource;
 		Collection collection = collectorService.getCurCollection();
 		if (null != collection)
 		{
-			for (Integer indiID : monitorMap.keySet())
-			{
-				monitorMap.get(indiID).getMonitorValue().setText("");
-			}
 
 			resource = collection.getResourceByResID(this.selectedBaseSite.getId());
 
@@ -410,10 +469,20 @@ public class MainJFrame extends JFrame
 			log.warn("the latest collection is empty");
 		}
 		IndicatorViewComponent mvSiteName = monitorMap.get(1); 
-		mvSiteName.getMonitorValue().setText((String)this.selectedBaseSite.getUserObject());
+		this.lblSiteNameValue.setText((String)this.selectedBaseSite.getUserObject());
+		this.lblSiteIDValue.setText(this.selectedBaseSite.getId());		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(collection!=null){
+			String dateString = formatter.format(collection.getCollectTime().getTime().toLocaleString());
+			this.lblTimeValue.setText(dateString);
+		}else{
+			this.lblTimeValue.setText("无数据");
+		}
+		
+		
+		
 		IndicatorViewComponent mvSiteID = monitorMap.get(2);
-		mvSiteID.getMonitorValue().setText(this.selectedBaseSite.getId());
-
+		
 	}
 
 }
